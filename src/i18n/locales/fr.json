@@ -1,0 +1,756 @@
+{
+    "metadata": {
+        "home": {
+            "title": "Allez Moris Travel | Découvrez Maurice à Votre Façon",
+            "description": "Réservez des excursions, locations de voitures, hébergements et transferts aéroport à l'île Maurice. Des expériences sur mesure pour chaque voyageur."
+        },
+        "about": {
+            "title": "À Propos | Allez Moris Travel",
+            "description": "Découvrez Allez Moris Travel — votre tour-opérateur en ligne de confiance à Maurice, proposant des expériences sur mesure."
+        },
+        "activities": {
+            "title": "Activités & Excursions | Allez Moris Travel",
+            "description": "Explorez des activités terrestres, nautiques et aériennes à Maurice. Réservez des excursions inoubliables avec Allez Moris Travel."
+        },
+        "activitiesCategory": {
+            "title": "Activités {{category}} à Maurice | Allez Moris Travel",
+            "description": "Découvrez les meilleures activités {{category}} à l'île Maurice avec Allez Moris Travel."
+        },
+        "services": {
+            "title": "Nos Services | Allez Moris Travel",
+            "description": "Location de voitures, hébergement et transferts aéroport — tout pour un séjour parfait à Maurice."
+        },
+        "rental": {
+            "title": "Location de Voitures à Maurice | Allez Moris Travel",
+            "description": "Louez des véhicules modernes et fiables à Maurice. Des voitures économiques aux SUV et scooters."
+        },
+        "stay": {
+            "title": "Hébergement à Maurice | Allez Moris Travel",
+            "description": "Trouvez villas, appartements et maisons d'hôtes à travers Maurice. Propriétés inspectées avec support local."
+        },
+        "transfer": {
+            "title": "Transferts Aéroport à Maurice | Allez Moris Travel",
+            "description": "Transferts privés de l'aéroport vers toutes les régions de Maurice. Tarifs fixes avec service d'accueil."
+        },
+        "itineraryBuilder": {
+            "title": "Planifiez Votre Voyage | Allez Moris Travel",
+            "description": "Créez un itinéraire personnalisé pour Maurice en quelques secondes. Répondez à quelques questions pour un plan de voyage intelligent."
+        },
+        "subscribe": {
+            "title": "Abonnez-vous & Gagnez | Allez Moris Travel",
+            "description": "Inscrivez-vous à notre newsletter et tentez de gagner un bon de 100€ pour votre prochaine activité à Maurice."
+        }
+    },
+    "nav": {
+        "home": "Accueil",
+        "activities": "Activités",
+        "subscribe": "Abonnez-vous & Gagnez",
+        "services": "Services",
+        "about": "À propos",
+        "contact": "Contact",
+        "itineraryBuilder": "Planifiez votre voyage"
+    },
+    "servicesPage": {
+        "title": "Nos Services",
+        "description": "Tout ce dont vous avez besoin pour un séjour parfait à Maurice.",
+        "categories": {
+            "rentals": {
+                "title": "Locations",
+                "description": "Sélection détaillée de voitures, scooters et bateaux pour votre exploration."
+            },
+            "accommodation": {
+                "title": "Hébergement",
+                "description": "Trouvez votre séjour de rêve, des villas de luxe aux maisons d'hôtes confortables."
+            },
+            "taxi": {
+                "title": "Services de Taxi",
+                "description": "Transferts fiables et confortables à travers l'île."
+            }
+        }
+    },
+    "hero": {
+        "title": "Votre aventure à Maurice commence ici",
+        "subtitle": "Des circuits uniques qui correspondent à votre style. Découvrez l'île à votre façon.",
+        "cta": "Trouver des circuits",
+        "searchPlaceholder": "Que voulez-vous explorer ?"
+    },
+    "discountBanner": {
+        "text": "Jusqu'à -15%",
+        "ariaLabel": "Offre limitée : jusqu'à 15% de réduction sur votre réservation"
+    },
+    "categories": {
+        "title": "Explorez Maurice à votre façon",
+        "subtitle": "Terre · Mer · Air · Location · Séjour",
+        "description": "Découvrez le meilleur de Maurice avec des circuits sur mesure conçus selon vos intérêts.",
+        "backToCategories": "← Retour aux catégories",
+        "activitiesTitle": "Activités : {{category}}",
+        "items": {
+            "land": {
+                "title": "Terre",
+                "description": "Explorez cascades, montagnes, villages et plus.",
+                "cta": "En savoir plus"
+            },
+            "sea": {
+                "title": "Mer",
+                "description": "Sorties en bateau, snorkeling, sports nautiques et plongée.",
+                "cta": "En savoir plus"
+            },
+            "air": {
+                "title": "Air",
+                "description": "Vols panoramiques, parachute ascensionnel et tours en hélicoptère.",
+                "cta": "En savoir plus"
+            },
+            "rental": {
+                "title": "Location",
+                "description": "Voitures, scooters, vélos, bateaux et équipements.",
+                "cta": "Voir les locations"
+            },
+            "stay": {
+                "title": "Séjour",
+                "description": "Villas, hôtels, maisons d'hôtes et séjours uniques.",
+                "cta": "Trouver un séjour"
+            }
+        }
+    },
+    "tours": {
+        "title": "Le Top 10 d'Allez-Moris",
+        "description": "Des expériences triées sur le volet qui capturent l'essence même de l'île Maurice.",
+        "viewDetails": "Voir les détails",
+        "perPerson": "/ personne"
+    },
+    "bucketList": {
+        "title": "Créer ma liste de rêve",
+        "badge": "Rêvez-le. Enregistrez-le. Nous le planifions.",
+        "description": "Dites-nous ce qui vous passionne, choisissez vos dates, et nous créerons l'aventure parfaite à Maurice.",
+        "form": {
+            "interests": "Qu'est-ce qui vous intéresse ? (Sélectionnez tout ce qui s'applique)",
+            "interestLabels": {
+                "catamaran": "Catamaran",
+                "kayak": "Pêche en Kayak",
+                "snorkeling": "Sorties Snorkeling",
+                "hiking": "Randonnée",
+                "dolphins": "Observation des dauphins",
+                "parasailing": "Parachute ascensionnel",
+                "portlouis": "Port Louis",
+                "scuba": "Plongée sous-marine",
+                "wildlife": "Nature et vie sauvage",
+                "culture": "Expériences culturelles",
+                "food": "Tours gastronomiques",
+                "private": "Tours privés",
+                "seaTours": "Excursions en Mer",
+                "speedboat": "Bateau Rapide",
+                "cataspeed": "Cataspeed",
+                "landTours": "Excursions Terrestres",
+                "rumTasting": "Dégustation de Rhum",
+                "temple": "Temple",
+                "church": "Église",
+                "sugarCane": "Canne à Sucre",
+                "colouredSand": "Terre des Sept Couleurs",
+                "botanicalGardens": "Jardin Botanique",
+                "localMarkets": "Marchés Locaux",
+                "portLouis": "Port Louis",
+                "teaFarm": "Plantation de Thé",
+                "waterActivities": "Activités Aquatiques",
+                "scubaDiving": "Plongée Sous-Marine",
+                "glassBoat": "Bateau à Fond de Verre",
+                "underseaWalk": "Marche Sous-Marine",
+                "submarine": "Sous-Marin",
+                "dolphinWatch": "Observation Dauphins",
+                "whaleWatch": "Observation Baleines",
+                "deepSeaFishing": "Pêche au Gros",
+                "shoreFishing": "Pêche du Bord",
+                "kayakFishing": "Pêche en Kayak",
+                "waterTubing": "Bouée Tractée",
+                "kayakingMangroves": "Kayak Mangroves",
+                "paddleBoarding": "Paddle Board",
+                "adventureNature": "Aventure & Nature",
+                "quadBiking": "Quad",
+                "zipline": "Tyrolienne",
+                "trailRuns": "Course en Sentier",
+                "nightRun": "Course Nocturne",
+                "horsebackRiding": "Équitation",
+                "mountainBiking": "VTT",
+                "safari": "Safari",
+                "natureWalk": "Marche Nature",
+                "aerialLuxury": "Aérien & Luxe",
+                "helicopter": "Hélicoptère",
+                "seaplane": "Hydravion",
+                "privateYacht": "Yacht Privé",
+                "sunsetCruise": "Croisière Couché de Soleil",
+                "sportingLeisure": "Sport & Loisirs",
+                "golf": "Golf",
+                "tennis": "Tennis",
+                "padel": "Padel",
+                "yoga": "Yoga / Bien-être",
+                "spa": "Spa & Massage",
+                "wildlifeFamily": "Famille & Nature",
+                "caselaParks": "Parc Casela",
+                "laVanille": "Parc La Vanille",
+                "aquarium": "Aquarium Maurice",
+                "sugarMuseum": "L'Aventure du Sucre",
+                "curiousCorner": "Curious Corner",
+                "transportRental": "Transport & Location",
+                "airportTransfer": "Transfert Aéroport",
+                "carHire": "Location Voiture",
+                "scooterHire": "Location Scooter",
+                "privateChauffeur": "Chauffeur Privé"
+            },
+            "arrival": "Date d'arrivée",
+            "departure": "Date de départ",
+            "selectDate": "Choisir une date",
+            "name": "Votre nom",
+            "namePlaceholder": "Jean Dupont",
+            "email": "Adresse e-mail",
+            "emailPlaceholder": "jean@exemple.com",
+            "guestDetails": "Détails du Client",
+            "phone": "Téléphone",
+            "people": "Nombre de Personnes",
+            "country": "Pays",
+            "selectCountry": "Sélectionnez votre pays",
+            "visitPreferences": "Préférences de Visite",
+            "firstTime": "Première Visite à Maurice ?",
+            "yes": "Oui",
+            "no": "Non",
+            "reason": "Raison de la Visite",
+            "reasons": {
+                "Holiday": "Vacances",
+                "Honeymoon": "Lune de Miel",
+                "Family Trip": "Voyage en Famille",
+                "Adventure": "Aventure",
+                "Other": "Autre"
+            },
+            "experience": "Que Souhaitez-Vous Découvrir ?",
+            "experiences": {
+                "Adventure": "Aventure",
+                "Local Experiences": "Expériences Locales",
+                "Relaxation": "Détente",
+                "Mix of All": "Un Peu de Tout"
+            },
+            "activityItinerary": "Itinéraire d'Activités",
+            "additionalNotes": "Notes Supplémentaires",
+            "notesLabel": "Des demandes spéciales ou préférences ?",
+            "notesPlaceholder": "Partagez toute information qui nous aidera à planifier votre expérience...",
+            "submit": "Envoyer ma liste",
+            "sending": "Envoi en cours...",
+            "success": "Liste envoyée ! 🎉",
+            "successDesc": "Nous vous contacterons dans les 24 heures pour planifier votre voyage de rêve.",
+            "error": "Erreur",
+            "errorDesc": "Une erreur est survenue. Veuillez réessayer plus tard."
+        }
+    },
+    "footer": {
+        "brandDesc": "Découvrez le meilleur de Maurice avec des circuits organisés selon vos envies.",
+        "quickLinks": "Liens rapides",
+        "categories": "Catégories",
+        "contact": "Contact",
+        "help": "Aide et Support",
+        "rights": "Tous droits réservés."
+    },
+    "activity": {
+        "back": "Retour aux circuits",
+        "overview": "Aperçu",
+        "highlights": "Points forts",
+        "included": "Ce qui est inclus",
+        "notIncluded": "Non inclus",
+        "timeline": "Votre journée",
+        "faq": "Foire aux questions",
+        "checkAvailability": "Réserver",
+        "enquireNow": "Pré-réserver",
+        "freeCancellation": "✓ Annulation gratuite jusqu'à 48h avant. 50% de frais entre 24 et 48h.",
+        "location": "Lieu",
+        "locationDesc": "Point de rencontre pour cette activité",
+        "viewOnMap": "Voir sur Google Maps",
+        "videoPreview": "Aperçu vidéo"
+    },
+    "subscribe": {
+        "title": "Abonnez-vous et Gagnez 100€",
+        "description": "Inscrivez-vous à notre newsletter et participez automatiquement à notre tirage au sort pour gagner un bon de 100€ pour votre prochaine activité !",
+        "form": {
+            "name": "Nom",
+            "email": "E-mail",
+            "submit": "S'abonner et Participer",
+            "success": "Vous êtes inscrit ! Bonne chance !",
+            "error": "Une erreur est survenue. Veuillez réessayer."
+        }
+    },
+    "services": {
+        "stay": {
+            "Badge": "Stay in Comfort",
+            "Title": "Accommodation in Mauritius",
+            "Description": "Whether you're dreaming of a 5-star resort on the beach or a cozy mountain retreat, we help you find the perfect home away from home.",
+            "Card": {
+                "Region": "Region",
+                "Beds": "Beds",
+                "Guests": "Up to {{count}} Guests",
+                "ViewDetails": "View Details",
+                "PricePerPeriod": "/ {{period}}"
+            },
+            "WhyBook": {
+                "Title": "Why Book With Us?",
+                "Reason1Title": "Personal Inspection",
+                "Reason1Desc": "Every property is personally inspected to ensure high standards of comfort and cleanliness.",
+                "Reason2Title": "Local Support",
+                "Reason2Desc": "Our local team is on hand 24/7 to assist with anything you need during your stay."
+            }
+        },
+        "rental": {
+            "Badge": "Self-Drive Experience",
+            "Title": "Car Rental in Mauritius",
+            "Description": "Discover the freedom of exploring Mauritius on your own terms. We offer a fleet of modern, reliable vehicles to suit every traveler's needs.",
+            "BookNow": "Pré-réserver {{model}}",
+            "BestFor": "Best for:",
+            "PerDay": "per day",
+            "WhyRent": {
+                "Title": "Why Rent With Us?",
+                "Reason1Title": "Modern Fleet",
+                "Reason1Desc": "Well-maintained vehicles",
+                "Reason2Title": "Full Insurance",
+                "Reason2Desc": "Drive with peace of mind",
+                "Reason3Title": "Flexible Pickup",
+                "Reason3Desc": "Airport or Hotel delivery",
+                "Reason4Title": "Fair Fuel",
+                "Reason4Desc": "Transparent policies"
+            },
+            "Cars": {
+                "economy": {
+                    "Title": "Small 5-Seater – Economy Class",
+                    "Description": "Perfect for couples or small families, our Economy 5-Seater option is ideal for getting around Mauritius comfortably and affordably. Compact in size, this vehicle is easy to drive, park, and maneuver on both coastal roads and town streets.",
+                    "Details": "Despite its small footprint, it offers practical interior space, air conditioning, and good fuel efficiency — making it a great choice for short stays, city visits, beach hopping, and everyday island exploring.",
+                    "BestFor": "Couples, solo travelers, short trips, budget-friendly travel.",
+                    "Features": [
+                        "5 Seats",
+                        "Compact",
+                        "Fuel Efficient"
+                    ]
+                },
+                "compact": {
+                    "Title": "Small / Medium 5-Seater – Compact Comfort",
+                    "Description": "A step up in comfort and space, the Compact 5-Seater is a popular all-round choice. It combines smooth handling, modern features, and a comfortable interior — ideal for guests who want a bit more room without driving a large vehicle.",
+                    "Details": "Great for exploring the island’s coastal roads, scenic routes, shopping areas, and day trips, this car offers a balance of economy and comfort.",
+                    "BestFor": "Couples, small families, guests wanting comfort with easy driving.",
+                    "Features": [
+                        "5 Seats",
+                        "Modern Features",
+                        "Smooth Handling"
+                    ]
+                },
+                "medium": {
+                    "Title": "Medium 5-Seater – Comfort Class",
+                    "Description": "Our Medium 5-Seater offers extra space, a higher driving position, and enhanced comfort for longer journeys. With a more spacious cabin and luggage capacity, it’s perfect for guests planning multiple excursions around the island.",
+                    "Details": "It’s well suited for both urban driving and exploring more scenic inland routes, offering a comfortable ride for all passengers.",
+                    "BestFor": "Families, longer stays, travelers exploring the whole island.",
+                    "Features": [
+                        "Spacious",
+                        "High Driving Position",
+                        "Large Luggage Capacity"
+                    ]
+                },
+                "suv": {
+                    "Title": "SUV 5-Seater – Adventure & Space",
+                    "Description": "The SUV 5-Seater is ideal for travelers who want a more elevated driving experience and additional interior space. With a stronger road presence and extra comfort, this vehicle is great for island adventures, scenic drives, and travelers carrying more luggage.",
+                    "Details": "It offers stability, comfort, and versatility — perfect for both coastal cruising and exploring Mauritius beyond the main tourist areas.",
+                    "BestFor": "Families, adventure travelers, guests seeking more space and comfort.",
+                    "Features": [
+                        "SUV",
+                        "Elevated View",
+                        "Versatile"
+                    ]
+                },
+                "7seater": {
+                    "Title": "7-Seater – Family & Group Travel",
+                    "Description": "Designed for larger families or small groups, our 7-Seater provides generous seating and space for luggage while maintaining comfort and easy drivability.",
+                    "Details": "This vehicle is ideal for airport transfers, family holidays, group outings, and guests planning multiple excursions together.",
+                    "BestFor": "Large families, groups, airport transfers, multi-day touring.",
+                    "Features": [
+                        "7 Seats",
+                        "Spacious",
+                        "Group Travel"
+                    ]
+                },
+                "scooter": {
+                    "Title": "Scooter Hire – 125cc (Urban Explorer Class)",
+                    "Description": "Discover Mauritius the fun and flexible way with our 125cc Scooter Hire — perfect for coastal cruising, beach hopping, and easy island exploring. Lightweight, fuel-efficient, and simple to handle, this scooter is ideal for navigating local roads, seaside routes, and town areas.",
+                    "Details": "The 125cc engine provides enough power for comfortable riding while remaining easy to control. Scooters are a fantastic way to avoid traffic, park easily, and enjoy the open-air island experience. Includes helmet(s) and basic safety check.",
+                    "BestFor": "Couples, solo travelers, short distances, coastal exploring, easy parking.",
+                    "Features": [
+                        "125cc",
+                        "Helmets Included",
+                        "Fuel Efficient"
+                    ]
+                }
+            }
+        },
+        "transfer": {
+            "Badge": "One-Way Private Transfers",
+            "Title": "Airport Transfer Rates – Mauritius",
+            "Description": "We offer private, door-to-door airport transfers from Sir Seewoosagur Ramgoolam International Airport (MRU) to all major regions of Mauritius. Prices depend on vehicle type and hotel location.",
+            "VehicleCategories": {
+                "Title": "Vehicle Categories",
+                "Subtitle": "Comfort & Style",
+                "Description": "Choose the vehicle that best suits your needs, from cozy couples' rides to spacious coaches for large groups.",
+                "Types": {
+                    "Standard": "Standard",
+                    "Family": "Family",
+                    "Coach": "Coach",
+                    "Luxury": "Luxury"
+                },
+                "Capacity": {
+                    "Standard": "1–3 passengers",
+                    "Family": "4–12 passengers",
+                    "Coach": "Up to 20 passengers",
+                    "Luxury": "1–3 passengers"
+                },
+                "IdealFor": {
+                    "Standard": "Couples, solo travelers",
+                    "Family": "Families, small groups",
+                    "Coach": "Large families, group travel",
+                    "Luxury": "Premium comfort, business travel"
+                }
+            },
+            "PriceGuide": {
+                "Title": "One-Way Transfer Price Guide",
+                "Subtitle": "Competitive fixed rates to all major destinations.",
+                "Headers": {
+                    "Destination": "Destination / Region",
+                    "Standard": "Standard",
+                    "Family": "Family",
+                    "Coach": "Coach",
+                    "Luxury": "Luxury"
+                },
+                "Note": "* Prices are per vehicle, not per person."
+            },
+            "Inclusions": {
+                "Title": "What’s Included",
+                "List": {
+                    "0": "Private vehicle (not shared)",
+                    "1": "Professional driver",
+                    "2": "Airport meet & greet",
+                    "3": "Luggage assistance",
+                    "4": "Fuel and road costs"
+                }
+            },
+            "Addons": {
+                "Title": "Optional Add-ons",
+                "ChildSeats": "Child seats",
+                "ChildSeatsDesc": "Available on request for safety and comfort.",
+                "ExtraStops": "Extra stops",
+                "ExtraStopsDesc": "Small supplement may apply for additional drop-offs."
+            },
+            "Info": {
+                "WaitingTime": "Waiting Time",
+                "Arrival": "Arrival:",
+                "ArrivalDesc": "Includes flight tracking and reasonable waiting time after landing.",
+                "Departure": "Departure:",
+                "DepartureDesc": "Pickup times are scheduled based on your flight departure time.",
+                "ImportantNotes": "Important Notes",
+                "NotesList": {
+                    "0": "Prices are per vehicle, not per person.",
+                    "1": "Night transfers (late evening / early morning) may have a small supplement.",
+                    "2": "Rates can be adjusted depending on season or fuel changes."
+                }
+            }
+        },
+        "stayDetail": {
+            "Back": "Back to Stays",
+            "Bedrooms": "Bedrooms",
+            "Guests": "Guests",
+            "Overview": "Overview",
+            "Features": "Property Features",
+            "Book": {
+                "Title": "Book this Stay",
+                "Price": "Price per night",
+                "Button": "Contact to Book",
+                "Note": "Minimum stay 3 nights"
+            }
+        }
+    },
+    "itineraryBuilder": {
+        "title": "Créez votre bucket list",
+        "description": "Répondez à quelques questions pour obtenir un plan de voyage personnalisé à l'île Maurice en quelques secondes",
+        "sections": {
+            "userContext": "Votre profil de voyage",
+            "tripDetails": "Détails de votre voyage",
+            "logistics": "Logistique et préférences",
+            "preferences": "Intérêts et rythme",
+            "constraints": "Besoins spécifiques"
+        },
+        "form": {
+            "name": "Votre nom",
+            "namePlaceholder": "Jean Dupont",
+            "travelStyle": "Style de voyage préféré",
+            "selectTravelStyle": "Sélectionnez un style de voyage",
+            "budgetLevel": "Niveau de budget",
+            "submit": "Générer mon itinéraire",
+            "destination": "Destination",
+            "destinationPlaceholder": "ex: Grand Baie, Le Morne",
+            "startDate": "Date de début",
+            "endDate": "Date de fin",
+            "pickADate": "Choisir une date",
+            "adults": "Adultes",
+            "childrenAges": "Âges des enfants",
+            "childrenAgesDescription": "Ajoutez l'âge de chaque enfant qui voyage avec vous.",
+            "childAgePlaceholder": "Âge",
+            "addChild": "Ajouter un enfant",
+            "removeChild": "Retirer",
+            "transportPreference": "Préférence de transport",
+            "selectTransportPreference": "Sélectionnez une option de transport",
+            "accommodationType": "Type d'hébergement",
+            "selectAccommodationType": "Sélectionnez un type d'hébergement",
+            "flightBooked": "Vol réservé",
+            "flightBookedDescription": "Cochez cette case si votre vol est déjà réservé.",
+            "interests": "Centres d'intérêt",
+            "selectInterests": "Sélectionnez vos centres d'intérêt",
+            "rhythm": "Rythme de voyage",
+            "dietaryRestrictions": "Restrictions alimentaires",
+            "selectDietaryRestrictions": "Sélectionnez les restrictions alimentaires",
+            "mobilityIssues": "Problèmes de mobilité",
+            "mobilityIssuesDescription": "Cochez si un voyageur a des problèmes de mobilité.",
+            "region": "Region",
+            "selectRegions": "Sélectionnez les régions que vous souhaitez visiter"
+        },
+        "travelStyles": {
+            "adventure": "Amateur d'aventure",
+            "relaxation": "Détente et repos",
+            "cultural": "Explorateur culturel",
+            "family": "Plaisirs en famille",
+            "romantic": "Escapade romantique",
+            "luxury": "Expérience de luxe",
+            "budget": "Petit budget",
+            "balanced": "Mix équilibré"
+        },
+        "budgetLevels": {
+            "luxury": "Luxe",
+            "midRange": "Milieu de gamme",
+            "budget": "Économique"
+        },
+        "transportOptions": {
+            "any": "N'importe quel",
+            "rentalCar": "Voiture de location",
+            "taxi": "Taxi",
+            "publicTransport": "Transport en commun",
+            "privateChauffeur": "Chauffeur privé"
+        },
+        "accommodationOptions": {
+            "any": "N'importe quel",
+            "hotel": "Hôtel",
+            "villa": "Villa",
+            "guesthouse": "Maison d'hôtes",
+            "boutiqueHotel": "Hôtel de charme"
+        },
+        "rhythms": {
+            "relaxed": "Détendu",
+            "balanced": "Équilibré",
+            "fastPaced": "Rythme rapide",
+            "adventure": "Axé sur l'aventure"
+        },
+        "interestsCategories": {
+            "beach_lagoon": "Plage & Lagon",
+            "nature_wildlife": "Nature & Faune",
+            "culture_history": "Culture & Histoire",
+            "gastronomy": "Gastronomie",
+            "water_sports": "Sports Nautiques",
+            "wellness_spa": "Bien-être & Spa"
+        },
+        "dietaryRestrictionsOptions": {
+            "vegetarian": "Végétarien",
+            "vegan": "Végétalien",
+            "glutenFree": "Sans gluten",
+            "dairyFree": "Sans produits laitiers",
+            "halal": "Halal",
+            "kosher": "Casher",
+            "none": "Aucune"
+        },
+        "placeholders": {
+            "tripDetails": "Détails de votre destination, dates et taille du groupe.",
+            "logistics": "Vos préférences de transport et d'hébergement.",
+            "preferences": "Quelles activités et quel rythme vous préférez.",
+            "constraints": "Restrictions alimentaires ou problèmes de mobilité."
+        },
+        "messages": {
+            "generatingItinerary": "Génération de votre itinéraire personnalisé...",
+            "errorOccurred": "Une erreur est survenue lors de la génération de votre itinéraire."
+        },
+        "itineraryDisplay": {
+            "yourPlan": "Votre plan d'itinéraire",
+            "day": "Jour"
+        },
+        "common": {
+            "previous": "Précédent",
+            "next": "Suivant",
+            "downloadPdf": "Télécharger l'itinéraire (PDF)",
+            "viewDetails": "Voir les détails",
+            "filterByRegion": "Filtrer par Région",
+            "allRegions": "Toutes les régions",
+            "sortBy": "Trier par...",
+            "sortDefault": "Par défaut",
+            "sortPriceAsc": "Prix (Croissant)",
+            "sortPriceDesc": "Prix (Décroissant)"
+        },
+        "regions": {
+            "North": "Nord",
+            "East": "Est",
+            "South": "Sud",
+            "West": "Ouest"
+        }
+    },
+    "chatbot": {
+        "title": "Ravi",
+        "welcomeMessage": "Bonjour, je suis Ravi, votre assistant de voyage. Comment puis-je vous aider aujourd'hui ?",
+        "defaultQuestions": {
+            "question1": "Sorties en catamaran ?",
+            "question2": "Comment vous contacter ?",
+            "question3": "Activités de plongée ?",
+            "question4": "Quel type d'expériences proposez-vous ?",
+            "question5": "Pouvez-vous m'aider à réserver un hébergement ?",
+            "question6": "Quelles sont vos activités les plus populaires ?",
+            "question7": "Comment fonctionne la création de circuit par l'IA ?",
+            "question8": "Puis-je modifier l'itinéraire proposé ?",
+            "question9": "Comment puis-je contacter Allez Moris ?"
+        },
+        "inputPlaceholder": "Tapez votre message...",
+        "sendButton": "Envoyer",
+        "messages": {
+            "errorSendingMessage": "Échec de l'envoi du message. Veuillez réessayer."
+        }
+    },
+    "booking": {
+        "bookActivity": "Réserver l'activité",
+        "fullName": "Nom complet",
+        "firstName": "Prénom",
+        "lastName": "Nom de famille",
+        "email": "E-mail",
+        "phone": "Numéro de téléphone",
+        "date": "Date",
+        "pickDate": "Choisir une date",
+        "adults": "Adultes",
+        "children": "Enfants (<12 ans)",
+        "groupPriceNote": "Cette activité est réservée en tant que groupe unique.",
+        "submit": "Demander la réservation",
+        "submitting": "Envoi en cours...",
+        "successMessage": "Demande de réservation envoyée avec succès !",
+        "participants": "Participants",
+        "chooseDate": "Choisir une date",
+        "summary": "Résumé de la réservation",
+        "checkout": "Payer",
+        "contactDetails": "Coordonnées",
+        "back": "Retour",
+        "payment": "Paiement",
+        "paymentDescription": "Finalisez votre paiement en toute sécurité via PayPal.",
+        "paymentSuccess": "Paiement réussi ! Votre réservation est confirmée.",
+        "paymentError": "Le paiement a échoué. Veuillez réessayer.",
+        "securePayment": "Paiement sécurisé",
+        "activity": "Activité",
+        "confirmationMessage": "Votre réservation est confirmée. Vous recevrez un e-mail de confirmation sous peu.",
+        "referenceNumber": "Référence",
+        "close": "Fermer",
+        "loadingPayment": "Chargement du paiement sécurisé...",
+        "creationError": "Échec de l'initialisation de la réservation. Veuillez réessayer.",
+        "groupBooking": "Réservation de groupe",
+        "total": "Total",
+        "agreeToPolicy": "En finalisant cette réservation, vous acceptez notre",
+        "viewPolicy": "politique d'annulation et de remboursement",
+        "agreeToTerms": "J'ai lu et j'accepte les",
+        "termsAndConditions": "Conditions générales"
+    },
+    "enquireForm": {
+        "title": "Demande de renseignements",
+        "description": "Veuillez remplir le formulaire ci-dessous et nous vous recontacterons avec un devis et les disponibilités.",
+        "name": "Nom complet",
+        "email": "E-mail",
+        "phone": "Téléphone",
+        "guests": "Nombre de personnes",
+        "participants": "Nombre de participants",
+        "adults": "Adultes",
+        "children": "Enfants",
+        "checkIn": "Date d'arrivée",
+        "checkOut": "Date de départ",
+        "pickUp": "Date de prise en charge",
+        "dropOff": "Date de restitution",
+        "preferredDate": "Date souhaitée",
+        "transferDate": "Date du transfert",
+        "flightDetails": "Détails du vol",
+        "flightDetailsPlaceholder": "ex: Vol MK015 arrivant à 09h30",
+        "message": "Message",
+        "messagePlaceholder": "Demandes spéciales ou questions...",
+        "submit": "Envoyer la demande",
+        "success": "Demande envoyée !",
+        "successMessage": "Merci ! Votre demande a bien été envoyée. Nous vous contacterons sous peu.",
+        "successDesc": "Nous vous répondrons dans les 24 heures.",
+        "close": "Fermer",
+        "prebookTitle": "Pré-réserver",
+        "prebookSubmit": "Confirmer la pré-réservation",
+        "prebookSuccess": "Pré-réservation reçue !",
+        "prebookSuccessDesc": "Votre place est réservée. Nous vous enverrons les détails de paiement dans les 24 heures pour la confirmer."
+    },
+    "aboutUs": {
+        "hero": {
+            "title": "À Propos — Allez Moris Travel",
+            "subtitle": "Bienvenue chez Allez Moris Travel — votre tour-opérateur en ligne de confiance basé à l'île Maurice."
+        },
+        "ourName": {
+            "p1": "Notre nom en dit long : <1>« Allez Moris »</1> signifie « Allons à Maurice » — et « Moris » est le nom local et chaleureux que nous utilisons pour notre île.",
+            "p2": "C’est familier, authentique et plein de cœur. C’est exactement ce que nous voulons que chaque voyageur ressente dès qu'il commence à planifier avec nous."
+        },
+        "whoWeAre": {
+            "title": "Qui Nous Sommes",
+            "p1": "Allez Moris Travel est un tour-opérateur moderne et mauricien créé pour les voyageurs qui veulent plus qu'un simple séjour — ils veulent une expérience.",
+            "p2": "Que vous veniez pour la première fois, que vous reveniez pour une nouvelle escapade, ou que vous planifiiez une célébration spéciale, nous vous aidons à explorer le meilleur de l'île en toute confiance."
+        },
+        "whatWeDo": {
+            "title": "Ce Que Nous Faisons",
+            "subtitle": "Nous vous aidons à planifier et réserver des expériences inoubliables à l'île Maurice, y compris :",
+            "items": [
+                "Excursions sur l'île et visites touristiques",
+                "Aventures à l'intérieur des terres et activités en nature",
+                "Croisières en catamaran et expériences dans le lagon",
+                "Transferts aéroport et transports privés",
+                "Locations de voitures",
+                "Itinéraires et forfaits sur mesure"
+            ]
+        },
+        "ourApproach": {
+            "title": "Notre Approche",
+            "subtitle": "Chez Allez Moris Travel, nous pensons que voyager doit être simple, fluide et personnel. C'est pourquoi nous privilégions :",
+            "items": [
+                "La qualité des expériences plutôt que la quantité",
+                "Des options sur mesure adaptées à différents styles de voyage",
+                "Des connaissances locales et des conseils honnêtes",
+                "Des partenaires et prestataires de services fiables",
+                "La commodité d'une agence en ligne avec un vrai support humain"
+            ]
+        },
+        "whyChooseUs": {
+            "title": "Pourquoi Choisir Allez Moris Travel",
+            "subtitle": "Parce que nous sommes locaux — et que nous nous soucions de vous.",
+            "p1": "Nous ne vendons pas seulement des excursions. Nous partageons l'endroit que nous appelons notre chez-nous. Nous sommes fiers d'offrir aux voyageurs des services sûrs, bien organisés et authentiques, tout en veillant à ce que chaque réservation soit facile et sécurisée.",
+            "p2": "Que vous soyez à la recherche d'aventures, de romance, de plaisirs en famille ou de détente absolue — Allez Moris Travel est prêt à vous guider."
+        },
+        "outro": {
+            "title": "Let’s Go — Allez Moris !",
+            "subtitle": "Laissez-nous nous occuper de la planification pendant que vous profitez de la douceur de vivre.",
+            "footer": "Allez Moris Travel — L'île Maurice rendue facile, authentique et inoubliable."
+        }
+    },
+    "contactPage": {
+        "title": "Contactez-nous",
+        "description": "Vous avez une question ou souhaitez commencer à planifier votre voyage parfait à l'île Maurice ? Envoyez-nous un message.",
+        "getInTouchTitle": "Nous contacter",
+        "emailLabel": "Envoyez-nous un e-mail",
+        "phoneLabel": "Appelez-nous / WhatsApp",
+        "businessHoursLabel": "Horaires d'ouverture",
+        "locationLabel": "Localisation",
+        "workingHours": "Lun - Dim : 8h00 - 18h00 (MUT)",
+        "form": {
+            "name": "Votre nom",
+            "email": "Adresse e-mail",
+            "subject": "Sujet",
+            "message": "Votre message",
+            "submit": "Envoyer le message",
+            "sending": "Envoi en cours...",
+            "success": "Message envoyé avec succès !",
+            "successDesc": "Nous vous répondrons dans les plus brefs délais.",
+            "error": "Erreur lors de l'envoi du message",
+            "errorDesc": "Veuillez réessayer plus tard ou nous contacter directement par e-mail."
+        }
+    }
+}
