@@ -30,14 +30,19 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
   // "rental" and "stay" are service pages, not Strapi categories, so they're
   // always appended rather than sourced from the CMS.
   const strapiCategories = await getCategories(params.lang);
+  // Always include all three activity categories in the defined order, using
+  // Strapi data when available and falling back to defaults per slug.
+  // This prevents "Air" from being silently dropped when Strapi returns only
+  // a partial set (e.g. sea+land) and the fallback block is skipped entirely.
+  const ACTIVITY_DEFAULTS = [
+    { id: 1, documentId: "sea", slug: "sea", name: "Sea" },
+    { id: 2, documentId: "land", slug: "land", name: "Land" },
+    { id: 3, documentId: "air", slug: "air", name: "Air" },
+  ];
   const categories = [
-    ...(strapiCategories.length > 0
-      ? strapiCategories
-      : [
-        { id: 1, documentId: "sea", slug: "sea", name: "Sea" },
-        { id: 2, documentId: "land", slug: "land", name: "Land" },
-        { id: 3, documentId: "air", slug: "air", name: "Air" },
-      ]),
+    ...ACTIVITY_DEFAULTS.map(
+      (fallback) => strapiCategories.find((c) => c.slug === fallback.slug) ?? fallback
+    ),
     { id: 4, documentId: "rental", slug: "rental", name: "Rental" },
     { id: 5, documentId: "stay", slug: "stay", name: "Stay" },
   ];
