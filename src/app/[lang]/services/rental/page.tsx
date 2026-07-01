@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import CarEnquireButton from "@/components/CarEnquireButton";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
+import { getRentalVehicles, getServicesRentalPage, getStrapiMedia } from "@/lib/api";
 
 export async function generateMetadata(props: {
     params: Promise<{ lang: string }>;
@@ -25,55 +26,73 @@ export default async function CarRentalPage(props: { params: Promise<{ lang: str
     const params = await props.params;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dict: Record<string, any> = await getDictionary(params.lang);
-    const cars = [
-        {
-            id: "economy",
-            model: "Suzuki S-Presso",
-            price: "€25",
-            image: "/suzuki-s-presso-.webp",
-        },
-        {
-            id: "compact",
-            model: "Suzuki Swift",
-            price: "€30",
-            image: "/Suzuki-swift.jpg",
-        },
-        {
-            id: "medium",
-            model: "Suzuki Fronx",
-            price: "€38",
-            image: "/Suzuki-fronx.jpg",
-        },
-        {
-            id: "suv",
-            model: "Suzuki Vitara",
-            price: "€48",
-            image: "/Suzuki-Vitara.jpg",
-        },
-        {
-            id: "7seater",
-            model: "Suzuki Ertiga",
-            price: "€42",
-            image: "/Suzuki-Ertiga.webp",
-        },
-        {
-            id: "scooter",
-            model: "Suzuki 125cc or Similar",
-            price: "€20",
-            image: "/suzuki-an125-white-124cc-scooter.jpg",
-        },
-    ].map((car) => {
-        const carData = dict.services.rental.Cars[car.id];
-        return {
-            ...car,
-            title: carData.Title,
-            description: carData.Description,
-            details: carData.Details,
-            bestFor: carData.BestFor,
-            features: carData.Features,
+    const [cmsVehicles, cmsPage] = await Promise.all([
+        getRentalVehicles(params.lang),
+        getServicesRentalPage(params.lang),
+    ]);
+
+    const cars = cmsVehicles.length > 0
+        ? cmsVehicles.map((v) => ({
+            id: v.vehicleId,
+            model: v.model,
+            price: v.price,
+            image: getStrapiMedia(v.image?.url) || "/placeholder.jpg",
+            title: v.title,
+            description: v.description,
+            details: v.details,
+            bestFor: v.bestFor,
+            features: v.features,
             period: dict.services.rental.PerDay,
-        };
-    });
+        }))
+        : [
+            {
+                id: "economy",
+                model: "Suzuki S-Presso",
+                price: "€25",
+                image: "/suzuki-s-presso-.webp",
+            },
+            {
+                id: "compact",
+                model: "Suzuki Swift",
+                price: "€30",
+                image: "/Suzuki-swift.jpg",
+            },
+            {
+                id: "medium",
+                model: "Suzuki Fronx",
+                price: "€38",
+                image: "/Suzuki-fronx.jpg",
+            },
+            {
+                id: "suv",
+                model: "Suzuki Vitara",
+                price: "€48",
+                image: "/Suzuki-Vitara.jpg",
+            },
+            {
+                id: "7seater",
+                model: "Suzuki Ertiga",
+                price: "€42",
+                image: "/Suzuki-Ertiga.webp",
+            },
+            {
+                id: "scooter",
+                model: "Suzuki 125cc or Similar",
+                price: "€20",
+                image: "/suzuki-an125-white-124cc-scooter.jpg",
+            },
+        ].map((car) => {
+            const carData = dict.services.rental.Cars[car.id];
+            return {
+                ...car,
+                title: carData.Title,
+                description: carData.Description,
+                details: carData.Details,
+                bestFor: carData.BestFor,
+                features: carData.Features,
+                period: dict.services.rental.PerDay,
+            };
+        });
 
     return (
         <div className="bg-[url('/sand-background-phone.png')] md:bg-[url('/sand_background.png')] bg-cover bg-fixed bg-center bg-no-repeat min-h-screen pb-20">
@@ -83,13 +102,13 @@ export default async function CarRentalPage(props: { params: Promise<{ lang: str
                     <div className="max-w-4xl mx-auto text-center">
                         <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-6">
                             <Car className="w-5 h-5 text-primary" />
-                            <span className="font-medium text-primary">{dict.services.rental.Badge}</span>
+                            <span className="font-medium text-primary">{cmsPage?.badge || dict.services.rental.Badge}</span>
                         </div>
                         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                            {dict.services.rental.Title}
+                            {cmsPage?.title || dict.services.rental.Title}
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                            {dict.services.rental.Description}
+                            {cmsPage?.description || dict.services.rental.Description}
                         </p>
                     </div>
                 </div>

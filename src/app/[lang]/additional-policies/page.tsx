@@ -1,4 +1,5 @@
 import { getAlternates } from "@/lib/seo";
+import { getLegalPageBySlug } from "@/lib/api";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
@@ -9,14 +10,22 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     };
 }
 
-export default async function AdditionalPoliciesPage() {
+export default async function AdditionalPoliciesPage(props: { params: Promise<{ lang: string }> }) {
+    const { lang } = await props.params;
+    const cms = await getLegalPageBySlug("additional-policies", lang);
+
     return (
         <div className="container mx-auto px-4 py-12 md:py-20 max-w-4xl">
             <h1 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
-                Additional Policies & Information
+                {cms?.title || "Additional Policies & Information"}
             </h1>
+            {cms?.body ? (
+                <div className="bg-card border rounded-xl p-6 md:p-10 shadow-sm text-foreground space-y-6 whitespace-pre-line">
+                    {cms.body}
+                </div>
+            ) : (
             <div className="bg-card border rounded-xl p-6 md:p-10 shadow-sm text-foreground space-y-6">
-                
+
                 <h2 className="text-2xl font-bold mt-8 mb-4">1. Website Disclaimer</h2>
                 <p>Information on our website is provided for general guidance only. Details such as prices, itineraries, availability, timings, and activity conditions may change without notice. Images are for illustrative purposes and actual experiences may vary.</p>
                 
@@ -48,6 +57,7 @@ export default async function AdditionalPoliciesPage() {
                 <h2 className="text-2xl font-bold mt-8 mb-4">9. Pricing Accuracy</h2>
                 <p>While we strive for accuracy, prices shown on our website may be corrected in case of technical or human error before booking confirmation.</p>
             </div>
+            )}
         </div>
     );
 }

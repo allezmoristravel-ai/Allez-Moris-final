@@ -13,9 +13,11 @@ import { Category } from "@/types/strapi";
 
 interface CategoryCarouselProps {
   categories: Category[];
+  title?: string;
+  subtitle?: string;
 }
 
-const CategoryCarousel = ({ categories }: CategoryCarouselProps) => {
+const CategoryCarousel = ({ categories, title, subtitle }: CategoryCarouselProps) => {
   const { t } = useTranslation();
 
   // Helper to get static image based on slug
@@ -38,12 +40,12 @@ const CategoryCarousel = ({ categories }: CategoryCarouselProps) => {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t("categories.title")}
+            {title || t("categories.title")}
           </h2>
           <div className="flex items-center justify-center gap-3 mb-4">
             <span className="h-px w-12 bg-border" />
             <span className="text-sm font-medium text-muted-foreground tracking-wider uppercase">
-              {t("categories.subtitle")}
+              {subtitle || t("categories.subtitle")}
             </span>
             <span className="h-px w-12 bg-border" />
           </div>
@@ -63,7 +65,7 @@ const CategoryCarousel = ({ categories }: CategoryCarouselProps) => {
           <CarouselContent>
             {categories.map((category) => (
               <CarouselItem
-                key={category.id}
+                key={category.slug}
                 className="basis-1/2 md:basis-1/3 lg:basis-1/5"
               >
                 <div className="h-full block">

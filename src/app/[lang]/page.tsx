@@ -1,4 +1,4 @@
-import { getContactDetails } from "@/lib/api";
+import { getContactDetails, getCategories, getTestimonials, getAccommodations, getHomePage } from "@/lib/api";
 import HeroSection from "@/components/HeroSection";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import TopToursCarousel from "@/components/TopToursCarousel";
@@ -24,14 +24,29 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
   const params = await props.params;
   const dict = await getDictionary(params.lang);
   const contactDetails = await getContactDetails(params.lang);
-  // const categories = await getCategories(params.lang);
+  const homePage = await getHomePage(params.lang);
+
+  // getCategories() only returns Strapi Activity categories (sea/land/air).
+  // "rental" and "stay" are service pages, not Strapi categories, so they're
+  // always appended rather than sourced from the CMS.
+  const strapiCategories = await getCategories(params.lang);
   const categories = [
-    { id: 1, documentId: "sea", slug: "sea", name: "Sea", description: "" },
-    { id: 2, documentId: "land", slug: "land", name: "Land", description: "" },
-    { id: 3, documentId: "air", slug: "air", name: "Air", description: "" },
-    { id: 4, documentId: "rental", slug: "rental", name: "Rental", description: "" },
-    { id: 5, documentId: "stay", slug: "stay", name: "Stay", description: "" },
+    ...(strapiCategories.length > 0
+      ? strapiCategories
+      : [
+        { id: 1, documentId: "sea", slug: "sea", name: "Sea" },
+        { id: 2, documentId: "land", slug: "land", name: "Land" },
+        { id: 3, documentId: "air", slug: "air", name: "Air" },
+      ]),
+    { id: 4, documentId: "rental", slug: "rental", name: "Rental" },
+    { id: 5, documentId: "stay", slug: "stay", name: "Stay" },
   ];
+
+  const [testimonials, accommodations] = await Promise.all([
+    getTestimonials(params.lang),
+    getAccommodations(params.lang),
+  ]);
+  const accommodationDeals = accommodations.data.filter((a) => a.isDeal);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -59,11 +74,24 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HeroSection />
-      <CategoryCarousel categories={categories} />
-      <HotelSpecialsCarousel />
+      <HeroSection images={homePage?.heroImages} />
+      <CategoryCarousel
+        categories={categories}
+        title={homePage?.categorySectionTitle}
+        subtitle={homePage?.categorySectionSubtitle}
+      />
+      <HotelSpecialsCarousel
+        deals={accommodationDeals}
+        title={homePage?.holidayPackagesTitle}
+        subtitle={homePage?.holidayPackagesSubtitle}
+      />
       <TopToursCarousel />
-      <TestimonialsSection />
+      <TestimonialsSection
+        testimonials={testimonials}
+        title={homePage?.testimonialsSectionTitle}
+        subtitle={homePage?.testimonialsSectionSubtitle}
+        ctaLabel={homePage?.testimonialsCtaLabel}
+      />
     </>
   );
 }

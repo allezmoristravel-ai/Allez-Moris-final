@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import {
     Carousel,
     CarouselContent,
@@ -8,10 +7,11 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, Loader2, MapPin } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
+import { getStrapiMedia } from "@/lib/api";
+import type { StrapiAccommodation } from "@/types/strapi";
 
 interface HotelSpecial {
     id: number;
@@ -26,12 +26,31 @@ interface HotelSpecial {
     amenities: string[];
 }
 
-const HotelSpecialsCarousel = () => {
-    const { i18n } = useTranslation();
-    const [hotels, setHotels] = useState<HotelSpecial[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+interface HotelSpecialsCarouselProps {
+    deals?: StrapiAccommodation[];
+    title?: string;
+    subtitle?: string;
+}
 
-    // Mock hotel data for now
+// No real per-property rating exists on the Accommodation content type yet —
+// shown as a fixed placeholder until/unless a `rating` field is added in Strapi.
+const PLACEHOLDER_RATING = 4.8;
+
+const mapDealToHotelSpecial = (a: StrapiAccommodation): HotelSpecial => ({
+    id: a.id,
+    name: a.title,
+    category: a.propertyType?.toLowerCase().includes("apartment") ? "apartment" : "hotel",
+    rating: PLACEHOLDER_RATING,
+    price: a.discountPrice ?? a.pricePerNight,
+    originalPrice: a.originalPrice,
+    location: a.location,
+    image: getStrapiMedia(a.coverImages?.[0]?.url) || "/category-stay.jpg",
+    description: a.description,
+    amenities: (a.features || "").split("\n").map((f) => f.replace(/^[-*•]\s*/, "").trim()).filter(Boolean),
+});
+
+const HotelSpecialsCarousel = ({ deals, title, subtitle }: HotelSpecialsCarouselProps) => {
+    // Mock hotel data fallback — used until real "isDeal" accommodations exist in Strapi
     const mockHotels: HotelSpecial[] = [
         {
             id: 1,
@@ -95,24 +114,11 @@ const HotelSpecialsCarousel = () => {
         },
     ];
 
-    useEffect(() => {
-        const loadHotels = async () => {
-            setIsLoading(true);
-            try {
-                // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 500));
-                setHotels(mockHotels);
-            } catch (error) {
-                console.error("Failed to load hotel specials", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    const hotels: HotelSpecial[] = deals && deals.length > 0
+        ? deals.map(mapDealToHotelSpecial)
+        : mockHotels;
 
-        loadHotels();
-    }, [i18n.language]);
-
-    if (!isLoading && hotels.length === 0) {
+    if (hotels.length === 0) {
         return null;
     }
 
@@ -122,7 +128,7 @@ const HotelSpecialsCarousel = () => {
                 {/* Section Header */}
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-                        Holiday Packages
+                        {title || "Holiday Packages"}
                     </h2>
                     <div className="flex items-center justify-center gap-2 mb-4">
                         {[...Array(5)].map((_, i) => (
@@ -130,7 +136,7 @@ const HotelSpecialsCarousel = () => {
                         ))}
                     </div>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        Discover our best accommodation deals for your Mauritius getaway
+                        {subtitle || "Discover our best accommodation deals for your Mauritius getaway"}
                     </p>
                 </div>
 
@@ -147,21 +153,14 @@ const HotelSpecialsCarousel = () => {
                     </Button>
                 </div>
 
-                {/* Loading State */}
-                {isLoading ? (
-                    <div className="flex justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                    </div>
-                ) : (
-                    /* Carousel */
-                    <Carousel
-                        opts={{
-                            align: "start",
-                            loop: true,
-                        }}
-                        className="w-full"
-                    >
-                        <CarouselContent>
+                <Carousel
+                    opts={{
+                        align: "start",
+                        loop: true,
+                    }}
+                    className="w-full"
+                >
+                    <CarouselContent>
                             {hotels.map((hotel) => (
                                 <CarouselItem
                                     key={hotel.id}
@@ -258,9 +257,8 @@ const HotelSpecialsCarousel = () => {
                                     </div>
                                 </CarouselItem>
                             ))}
-                        </CarouselContent>
-                    </Carousel>
-                )}
+                    </CarouselContent>
+                </Carousel>
             </div>
         </section>
     );

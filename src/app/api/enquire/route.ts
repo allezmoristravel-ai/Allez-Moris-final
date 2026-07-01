@@ -5,31 +5,26 @@ import { supabase } from '@/lib/supabase';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { name, email, phone, adults, children, checkIn, checkOut, message, itemName, type, flightDetails } = body;
+        const { full_name, email, phone, adults, children, start_date, end_date, message, itemName, type } = body;
 
-        if (!name || !email) {
-            return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
+        if (!full_name || !email || !phone || !start_date) {
+            return NextResponse.json({ error: 'Name, email, phone and start date are required' }, { status: 400 });
         }
 
-        // booking.requests has no columns for type/end_date/flight_details/adults+children split,
-        // so anything that doesn't fit a dedicated column is folded into `notes`.
+        // booking.requests columns now map 1:1 to the form fields.
         // reference and activity_ref are left null — the back office assigns those later.
-        const extraNotes = [
-            `Type: ${type}`,
-            `Adults: ${adults ?? 1}, Children: ${children ?? 0}`,
-            checkOut ? `Check-out/Drop-off: ${checkOut}` : null,
-            flightDetails ? `Flight details: ${flightDetails}` : null,
-            message ? `Message: ${message}` : null,
-        ].filter(Boolean).join('\n');
-
         const { error: supabaseError } = await supabase.from('requests').insert({
-            customer_name: name,
-            customer_email: email,
-            customer_phone: phone || null,
+            full_name,
+            email,
+            phone,
+            adults: Number.isFinite(Number(adults)) ? Number(adults) : 1,
+            children: Number.isFinite(Number(children)) ? Number(children) : 0,
+            start_date,
+            end_date: end_date || null,
+            message: message || '',
+            form_type: type,
             activity_name: itemName,
-            requested_date: checkIn || null,
-            party_size: (adults ?? 1) + (children ?? 0),
-            notes: extraNotes,
+            party_size: (Number(adults) || 1) + (Number(children) || 0),
             status: 'pending_review',
         });
 
@@ -64,7 +59,7 @@ export async function POST(req: Request) {
                         <div style="background: #fff; padding: 24px; border: 1px solid #e5e5e5; border-top: none; border-radius: 0 0 12px 12px;">
                             <h2 style="color: #333; font-size: 18px; margin-top: 0;">Contact Details</h2>
                             <table style="width: 100%; border-collapse: collapse;">
-                                <tr><td style="padding: 8px 0; color: #666;">Name</td><td style="padding: 8px 0; font-weight: bold;">${name}</td></tr>
+                                <tr><td style="padding: 8px 0; color: #666;">Name</td><td style="padding: 8px 0; font-weight: bold;">${full_name}</td></tr>
                                 <tr><td style="padding: 8px 0; color: #666;">Email</td><td style="padding: 8px 0;"><a href="mailto:${email}">${email}</a></td></tr>
                                 ${phone ? `<tr><td style="padding: 8px 0; color: #666;">Phone</td><td style="padding: 8px 0;">${phone}</td></tr>` : ''}
                                 ${adults ? `<tr><td style="padding: 8px 0; color: #666;">Adults</td><td style="padding: 8px 0;">${adults}</td></tr>` : ''}
@@ -73,9 +68,8 @@ export async function POST(req: Request) {
 
                             <h2 style="color: #333; font-size: 18px; margin-top: 24px;">Booking Details</h2>
                             <table style="width: 100%; border-collapse: collapse;">
-                                ${checkIn ? `<tr><td style="padding: 8px 0; color: #666;">Date/Check-in</td><td style="padding: 8px 0; font-weight: bold;">${checkIn}</td></tr>` : ''}
-                                ${checkOut ? `<tr><td style="padding: 8px 0; color: #666;">Check-out</td><td style="padding: 8px 0; font-weight: bold;">${checkOut}</td></tr>` : ''}
-                                ${flightDetails ? `<tr><td style="padding: 8px 0; color: #666;">Flight Details</td><td style="padding: 8px 0; font-weight: bold;">${flightDetails}</td></tr>` : ''}
+                                ${start_date ? `<tr><td style="padding: 8px 0; color: #666;">Date/Check-in</td><td style="padding: 8px 0; font-weight: bold;">${start_date}</td></tr>` : ''}
+                                ${end_date ? `<tr><td style="padding: 8px 0; color: #666;">Check-out</td><td style="padding: 8px 0; font-weight: bold;">${end_date}</td></tr>` : ''}
                             </table>
 
                             ${message ? `

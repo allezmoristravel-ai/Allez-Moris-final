@@ -33,28 +33,28 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [name, setName] = useState("");
+    const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [adults, setAdults] = useState("2");
     const [children, setChildren] = useState("0");
-    const [checkIn, setCheckIn] = useState<Date | undefined>(addDays(new Date(), 1));
-    const [checkOut, setCheckOut] = useState<Date | undefined>(addDays(new Date(), 3));
+    const [startDate, setStartDate] = useState<Date | undefined>(addDays(new Date(), 1));
+    const [endDate, setEndDate] = useState<Date | undefined>(addDays(new Date(), 3));
     const [message, setMessage] = useState("");
-    const [flightDetails, setFlightDetails] = useState("");
-    const [isCheckInOpen, setIsCheckInOpen] = useState(false);
-    const [isCheckOutOpen, setIsCheckOutOpen] = useState(false);
+    const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+    const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+
+    const hasEndDate = type === "accommodation" || type === "rental";
 
     const resetForm = () => {
-        setName("");
+        setFullName("");
         setEmail("");
         setPhone("");
         setAdults("2");
         setChildren("0");
-        setCheckIn(addDays(new Date(), 1));
-        setCheckOut(addDays(new Date(), 3));
+        setStartDate(addDays(new Date(), 1));
+        setEndDate(addDays(new Date(), 3));
         setMessage("");
-        setFlightDetails("");
         setIsSuccess(false);
         setError(null);
     };
@@ -69,15 +69,14 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name,
+                    full_name: fullName,
                     email,
                     phone,
                     adults: parseInt(adults),
                     children: parseInt(children),
-                    checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : "",
-                    checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : "",
+                    start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
+                    ...(hasEndDate ? { end_date: endDate ? format(endDate, "yyyy-MM-dd") : "" } : {}),
                     message,
-                    flightDetails,
                     itemName,
                     type,
                 }),
@@ -141,8 +140,8 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                                 <Input
                                     id="enquire-name"
                                     required
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
                                     placeholder="John Doe"
                                 />
                             </div>
@@ -163,11 +162,12 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
 
                         <div className="space-y-2">
                             <Label htmlFor="enquire-phone">
-                                {t("enquireForm.phone", { fallback: "Phone" })}
+                                {t("enquireForm.phone", { fallback: "Phone" })} *
                             </Label>
                             <Input
                                 id="enquire-phone"
                                 type="tel"
+                                required
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 placeholder="+230 1234 5678"
@@ -214,29 +214,29 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                                         ? t("enquireForm.transferDate", { fallback: "Transfer Date" })
                                         : t("enquireForm.checkIn", { fallback: "Check-in" })}
                                 </Label>
-                                <Popover open={isCheckInOpen} onOpenChange={setIsCheckInOpen}>
+                                <Popover open={isStartDateOpen} onOpenChange={setIsStartDateOpen}>
                                     <PopoverTrigger asChild>
                                         <Button
                                             variant="outline"
                                             className={cn(
                                                 "w-full justify-start text-left font-normal",
-                                                !checkIn && "text-muted-foreground"
+                                                !startDate && "text-muted-foreground"
                                             )}
                                         >
                                             <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {checkIn ? format(checkIn, "PPP") : "Pick a date"}
+                                            {startDate ? format(startDate, "PPP") : "Pick a date"}
                                         </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-auto p-0 bg-card" align="start">
                                         <Calendar
                                             mode="single"
-                                            selected={checkIn}
+                                            selected={startDate}
                                             onSelect={(date) => {
-                                                setCheckIn(date);
-                                                if (checkOut && date && checkOut < date) {
-                                                    setCheckOut(addDays(date, 2));
+                                                setStartDate(date);
+                                                if (endDate && date && endDate < date) {
+                                                    setEndDate(addDays(date, 2));
                                                 }
-                                                setIsCheckInOpen(false);
+                                                setIsStartDateOpen(false);
                                             }}
                                             disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                                             autoFocus
@@ -244,35 +244,35 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                                     </PopoverContent>
                                 </Popover>
                             </div>
-                            {type !== "activity" && type !== "transfer" && (
+                            {hasEndDate && (
                                 <div className="space-y-2">
                                     <Label>
                                         {type === "rental"
                                             ? t("enquireForm.dropOff", { fallback: "Drop-off Date" })
                                             : t("enquireForm.checkOut", { fallback: "Check-out" })}
                                     </Label>
-                                    <Popover open={isCheckOutOpen} onOpenChange={setIsCheckOutOpen}>
+                                    <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant="outline"
                                                 className={cn(
                                                     "w-full justify-start text-left font-normal",
-                                                    !checkOut && "text-muted-foreground"
+                                                    !endDate && "text-muted-foreground"
                                                 )}
                                             >
                                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {checkOut ? format(checkOut, "PPP") : "Pick a date"}
+                                                {endDate ? format(endDate, "PPP") : "Pick a date"}
                                             </Button>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0 bg-card" align="start">
                                             <Calendar
                                                 mode="single"
-                                                selected={checkOut}
+                                                selected={endDate}
                                                 onSelect={(date) => {
-                                                    setCheckOut(date);
-                                                    setIsCheckOutOpen(false);
+                                                    setEndDate(date);
+                                                    setIsEndDateOpen(false);
                                                 }}
-                                                disabled={(date) => date < (checkIn || new Date(new Date().setHours(0, 0, 0, 0)))}
+                                                disabled={(date) => date < (startDate || new Date(new Date().setHours(0, 0, 0, 0)))}
                                                 autoFocus
                                             />
                                         </PopoverContent>
@@ -280,20 +280,6 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                                 </div>
                             )}
                         </div>
-
-                        {type === "transfer" && (
-                            <div className="space-y-2">
-                                <Label htmlFor="enquire-flight">
-                                    {t("enquireForm.flightDetails", { fallback: "Flight Details" })}
-                                </Label>
-                                <Input
-                                    id="enquire-flight"
-                                    value={flightDetails}
-                                    onChange={(e) => setFlightDetails(e.target.value)}
-                                    placeholder={t("enquireForm.flightDetailsPlaceholder", { fallback: "e.g. Flight MK015 arriving at 09:30 AM" })}
-                                />
-                            </div>
-                        )}
 
                         <div className="space-y-2">
                             <Label htmlFor="enquire-message">
@@ -303,7 +289,11 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                                 id="enquire-message"
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
-                                placeholder={t("enquireForm.messagePlaceholder", { fallback: "Any special requests or questions..." })}
+                                placeholder={
+                                    type === "transfer"
+                                        ? t("enquireForm.messagePlaceholderTransfer", { fallback: "Please include your flight details (flight number, arrival/departure time)..." })
+                                        : t("enquireForm.messagePlaceholder", { fallback: "Any special requests or questions..." })
+                                }
                                 rows={3}
                                 className="resize-none"
                             />

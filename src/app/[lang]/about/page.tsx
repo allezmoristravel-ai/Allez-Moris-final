@@ -4,6 +4,7 @@ import { CheckCircle2, Compass, Map, Heart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
+import { getAboutPage } from "@/lib/api";
 
 export async function generateMetadata(props: {
   params: Promise<{ lang: string }>;
@@ -20,7 +21,44 @@ export async function generateMetadata(props: {
 export default async function AboutPage(props: { params: Promise<{ lang: string }> }) {
   const params = await props.params;
   const dict = await getDictionary(params.lang);
-  const about = dict.aboutUs;
+  const cms = await getAboutPage(params.lang);
+
+  const about = {
+    hero: {
+      title: cms?.heroTitle || dict.aboutUs?.hero?.title,
+      subtitle: cms?.heroSubtitle || dict.aboutUs?.hero?.subtitle,
+    },
+    ourName: {
+      p1: dict.aboutUs?.ourName?.p1,
+      p2: cms?.ourNameP2 || dict.aboutUs?.ourName?.p2,
+    },
+    whoWeAre: {
+      title: cms?.whoWeAreTitle || dict.aboutUs?.whoWeAre?.title,
+      p1: cms?.whoWeAreP1 || dict.aboutUs?.whoWeAre?.p1,
+      p2: cms?.whoWeAreP2 || dict.aboutUs?.whoWeAre?.p2,
+    },
+    whatWeDo: {
+      title: cms?.whatWeDoTitle || dict.aboutUs?.whatWeDo?.title,
+      subtitle: cms?.whatWeDoSubtitle || dict.aboutUs?.whatWeDo?.subtitle,
+      items: cms?.whatWeDoItems?.length ? cms.whatWeDoItems : dict.aboutUs?.whatWeDo?.items,
+    },
+    ourApproach: {
+      title: cms?.ourApproachTitle || dict.aboutUs?.ourApproach?.title,
+      subtitle: cms?.ourApproachSubtitle || dict.aboutUs?.ourApproach?.subtitle,
+      items: cms?.ourApproachItems?.length ? cms.ourApproachItems : dict.aboutUs?.ourApproach?.items,
+    },
+    whyChooseUs: {
+      title: cms?.whyChooseUsTitle || dict.aboutUs?.whyChooseUs?.title,
+      subtitle: cms?.whyChooseUsSubtitle || dict.aboutUs?.whyChooseUs?.subtitle,
+      p1: cms?.whyChooseUsP1 || dict.aboutUs?.whyChooseUs?.p1,
+      p2: cms?.whyChooseUsP2 || dict.aboutUs?.whyChooseUs?.p2,
+    },
+    outro: {
+      title: cms?.outroTitle || dict.aboutUs?.outro?.title,
+      subtitle: cms?.outroSubtitle || dict.aboutUs?.outro?.subtitle,
+      footer: cms?.outroFooter || dict.aboutUs?.outro?.footer,
+    },
+  };
 
   return (
     <div className="min-h-screen pb-16">

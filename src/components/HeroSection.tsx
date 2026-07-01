@@ -5,16 +5,26 @@ import Link from "next/link";
 import { MapPinned, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import { getStrapiMedia } from "@/lib/api";
+import type { CloudImage } from "@/types/strapi";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+    images?: CloudImage[];
+}
+
+const HeroSection = ({ images }: HeroSectionProps) => {
     const { t, i18n } = useTranslation();
     const lang = i18n.language?.split("-")[0] || "en";
 
-    const heroImages = [
+    const defaultHeroImages = [
         "/hero-mauritius.jpg",
         "/category-sea.jpg",
         "/category-land.jpg",
     ];
+    const cmsHeroImages = (images || [])
+        .map((img) => getStrapiMedia(img.url))
+        .filter((url): url is string => Boolean(url));
+    const heroImages = cmsHeroImages.length > 0 ? cmsHeroImages : defaultHeroImages;
 
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 

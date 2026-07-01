@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import I18nProvider from "@/components/i18n-provider";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
-import { getContactDetails } from "@/lib/api";
+import { getContactDetails, getGlobalSettings } from "@/lib/api";
 import Chatbot from "@/components/Chatbot";
 
 const sans = Open_Sans({ subsets: ["latin"], variable: "--font-sans" });
@@ -45,6 +45,7 @@ export default async function RootLayout(props: {
     // 1. Load the translations for the requested language on the SERVER
     const dictionary = await getDictionary(params.lang);
     const contactDetails = await getContactDetails(params.lang);
+    const globalSettings = await getGlobalSettings(params.lang);
 
     return (
         <html lang={params.lang}>
@@ -77,7 +78,7 @@ export default async function RootLayout(props: {
                         <main className="min-h-screen pt-16 md:pt-20">
                             {children}
                         </main>
-                        <Footer contactDetails={contactDetails} />
+                        <Footer contactDetails={contactDetails} footerHelpLinks={globalSettings?.footerHelpLinks} />
                     </Providers>
                     <Chatbot />
                 </I18nProvider>

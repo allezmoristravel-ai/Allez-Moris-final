@@ -21,12 +21,23 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 interface FooterProps {
   contactDetails?: ContactDetails | null;
+  footerHelpLinks?: { id: number; label: string; url: string }[];
 }
 
-const Footer = ({ contactDetails }: FooterProps) => {
+const defaultHelpLinks = (lang: string) => [
+  { label: "Cancellation Policy", url: `/${lang}/cancellation-policy` },
+  { label: "Privacy Policy", url: `/${lang}/privacy-policy` },
+  { label: "Additional Policies", url: `/${lang}/additional-policies` },
+  { label: "Booking & Payment Policy", url: `/${lang}/booking-and-payment-policy` },
+  { label: "Delivery Terms of Suppliers", url: `/${lang}/delivery-terms-of-suppliers-policy` },
+  { label: "Complaint Resolution Policy", url: `/${lang}/customer-complaint-resolution-policy` },
+];
+
+const Footer = ({ contactDetails, footerHelpLinks }: FooterProps) => {
   const { t } = useTranslation();
   const params = useParams();
-  const lang = params?.lang || 'en';
+  const lang = (params?.lang as string) || 'en';
+  const helpLinks = footerHelpLinks?.length ? footerHelpLinks : defaultHelpLinks(lang);
 
   return (
     <footer id="contact" className="bg-[#faf0e6] backdrop-blur-md text-foreground py-12 md:py-16 border-t border-border/50">
@@ -124,12 +135,9 @@ const Footer = ({ contactDetails }: FooterProps) => {
           <div>
             <h4 className="font-semibold mb-4">{t("footer.help") || "Help & Support"}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href={`/${lang}/cancellation-policy`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Cancellation Policy</a></li>
-              <li><a href={`/${lang}/privacy-policy`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
-              <li><a href={`/${lang}/additional-policies`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Additional Policies</a></li>
-              <li><a href={`/${lang}/booking-and-payment-policy`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Booking & Payment Policy</a></li>
-              <li><a href={`/${lang}/delivery-terms-of-suppliers-policy`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Delivery Terms of Suppliers</a></li>
-              <li><a href={`/${lang}/customer-complaint-resolution-policy`} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Complaint Resolution Policy</a></li>
+              {helpLinks.map((link) => (
+                <li key={link.url}><a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">{link.label}</a></li>
+              ))}
             </ul>
           </div>
         </div>

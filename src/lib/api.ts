@@ -2,7 +2,11 @@ import qs from 'qs';
 import { wpApi } from '@/lib/wordpress';
 import { activities as localActivities } from '@/data/activities';
 import { accommodations as localAccommodations } from '@/data/accommodations';
-import { Activity, Category, StrapiResponse, ContactDetails, StrapiAccommodation } from '@/types/strapi';
+import {
+    Activity, Category, StrapiResponse, ContactDetails, StrapiAccommodation,
+    Testimonial, LegalPage, RentalVehicle, TransferVehicleCategory, TransferPriceRoute,
+    HomePage, AboutPage, ServicesRentalPage, ServicesTransferPage, GlobalSettings,
+} from '@/types/strapi';
 import { ENABLED_LOCALES, DEFAULT_LOCALE } from '@/config/i18n.config';
 import { cache } from 'react';
 
@@ -105,47 +109,6 @@ export const getStrapiMedia = (url: string | undefined) => {
     return url;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mapWordPressActivityToStrapi = (activity: Record<string, any>): Activity => ({
-    id: activity.id,
-    documentId: activity.id,
-    slug: activity.id,
-    internalName: activity.title || activity.id,
-    isActive: true,
-    isBookable: true,
-    title: activity.title || '',
-    overview: activity.overview || '',
-    highlights: Array.isArray(activity.highlights) ? activity.highlights.join('\n') : (activity.highlights || ''),
-    inclusions: Array.isArray(activity.inclusions) ? activity.inclusions.join('\n') : (activity.inclusions || ''),
-    exclusions: Array.isArray(activity.exclusions) ? activity.exclusions.join('\n') : (activity.exclusions || ''),
-    duration: activity.duration || '',
-    region: activity.region || '',
-    bookingWidget: activity.bookingWidget || '',
-    publicPrice: typeof activity.price === 'number' ? activity.price : parseFloat(activity.price) || 0,
-    publicPriceMur: undefined,
-    netRate: undefined,
-    maxPersons: activity.maxPersons ?? undefined,
-    price: activity.price ? `${activity.currency || '€'}${activity.price}` : '€0',
-    isGroupPrice: activity.isGroupPrice ?? false,
-    childPrice: activity.childPrice ?? undefined,
-    coverImage: activity.image ? [{
-        id: 0,
-        documentId: activity.id,
-        url: activity.image,
-        provider: 'local',
-        width: activity.imageWidth || 0,
-        height: activity.imageHeight || 0,
-        alternativeText: activity.title,
-    }] : undefined,
-    category: activity.category ? { id: 0, documentId: activity.category, name: activity.category, slug: activity.category } : undefined,
-    subcategory: activity.subcategory || undefined,
-    locationUrl: activity.locationUrl || undefined,
-    youtubeLink: activity.youtubeLink || undefined,
-    itinerary: Array.isArray(activity.itinerary) ? activity.itinerary : [],
-    faqs: Array.isArray(activity.faqs) ? activity.faqs : [],
-    locale: activity.locale || 'en',
-});
-
 export const getActivities = async (locale = 'en', page = 1, pageSize = 20): Promise<StrapiResponse<Activity>> => {
     if (DEMO_MODE) {
         return {
@@ -181,7 +144,7 @@ export const getActivities = async (locale = 'en', page = 1, pageSize = 20): Pro
             try {
                 const wpActivities = await wpApi.getActivities(locale);
                 return {
-                    data: wpActivities.map((a) => mapWordPressActivityToStrapi(a)),
+                    data: wpActivities,
                     meta: { pagination: { page: 1, pageSize: wpActivities.length, pageCount: 1, total: wpActivities.length } },
                 };
             } catch (fallbackError) {
@@ -201,7 +164,7 @@ export const getActivities = async (locale = 'en', page = 1, pageSize = 20): Pro
         try {
             const wpActivities = await wpApi.getActivities(locale);
             return {
-                data: wpActivities.map((a) => mapWordPressActivityToStrapi(a)),
+                data: wpActivities,
                 meta: { pagination: { page: 1, pageSize: wpActivities.length, pageCount: 1, total: wpActivities.length } },
             };
         } catch (fallbackError) {
@@ -243,7 +206,7 @@ export const getActivityBySlug = async (slug: string, locale = 'en'): Promise<Ac
             console.log(`[API] Strapi returned no activity for slug ${slug}, using WordPress fallback`);
             try {
                 const wpActivity = await wpApi.getActivityBySlug(slug, locale);
-                return wpActivity ? mapWordPressActivityToStrapi(wpActivity) : getLocalActivityBySlug(slug) || null;
+                return wpActivity || getLocalActivityBySlug(slug) || null;
             } catch (fallbackError) {
                 console.error(`WordPress fallback failed for slug ${slug}:`, fallbackError);
                 return getLocalActivityBySlug(slug) || null;
@@ -256,7 +219,7 @@ export const getActivityBySlug = async (slug: string, locale = 'en'): Promise<Ac
         console.error(`Error fetching activity by slug ${slug}:`, error);
         try {
             const wpActivity = await wpApi.getActivityBySlug(slug, locale);
-            return wpActivity ? mapWordPressActivityToStrapi(wpActivity) : getLocalActivityBySlug(slug) || null;
+            return wpActivity || getLocalActivityBySlug(slug) || null;
         } catch (fallbackError) {
             console.error(`WordPress fallback failed for slug ${slug}:`, fallbackError);
             return getLocalActivityBySlug(slug) || null;
@@ -312,7 +275,7 @@ export const getActivitiesByCategory = async (category: string, locale = 'en', p
                     const activityCategory = getLocalActivityCategory(a)?.toLowerCase();
                     return activityCategory === category.toLowerCase();
                 });
-                const mapped = filtered.map((a) => mapWordPressActivityToStrapi(a));
+                const mapped = filtered;
                 return {
                     data: mapped,
                     meta: { pagination: { page: 1, pageSize: mapped.length, pageCount: 1, total: mapped.length } },
@@ -338,7 +301,7 @@ export const getActivitiesByCategory = async (category: string, locale = 'en', p
                 const activityCategory = getLocalActivityCategory(a)?.toLowerCase();
                 return activityCategory === category.toLowerCase();
             });
-            const mapped = filtered.map((a) => mapWordPressActivityToStrapi(a));
+            const mapped = filtered;
             return {
                 data: mapped,
                 meta: { pagination: { page: 1, pageSize: mapped.length, pageCount: 1, total: mapped.length } },
@@ -654,3 +617,91 @@ export const getAccommodationBySlug = async (slug: string, locale = 'en'): Promi
         return null;
     }
 };
+
+// ─── CMS-managed editorial content ───────────────────────────────────────────
+// Unlike Activities/Accommodations, these have no WordPress/local-data fallback
+// tier — if Strapi has no entry yet (content type not created, or empty),
+// these resolve to [] / null and callers fall back to existing static/i18n content.
+
+const fetchStrapiCollection = async <T>(
+    endpoint: string,
+    locale: string,
+    extraQuery: Record<string, unknown> = {},
+): Promise<T[]> => {
+    if (DEMO_MODE) return [];
+    const safeLocale = sanitizeLocale(locale);
+    const query = qs.stringify({ locale: safeLocale, populate: '*', ...extraQuery }, { encodeValuesOnly: true });
+    const url = `${getBaseUrl()}/${endpoint}?${query}`;
+
+    try {
+        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 3600 } });
+        if (response.status === 404) return [];
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const json = await response.json();
+        const data = Array.isArray(json?.data) ? json.data : [];
+
+        if (data.length === 0 && locale !== 'en') {
+            return fetchStrapiCollection<T>(endpoint, 'en', extraQuery);
+        }
+        return data;
+    } catch (error) {
+        console.error(`[API] Error fetching ${endpoint}:`, error);
+        return [];
+    }
+};
+
+const fetchStrapiSingle = async <T>(endpoint: string, locale: string): Promise<T | null> => {
+    if (DEMO_MODE) return null;
+    const safeLocale = sanitizeLocale(locale);
+    const query = qs.stringify({ locale: safeLocale, populate: '*' }, { encodeValuesOnly: true });
+    const url = `${getBaseUrl()}/${endpoint}?${query}`;
+
+    try {
+        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 3600 } });
+        if (response.status === 404) return null;
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const json = await response.json();
+
+        if (!json?.data && locale !== 'en') {
+            return fetchStrapiSingle<T>(endpoint, 'en');
+        }
+        return json?.data || null;
+    } catch (error) {
+        console.error(`[API] Error fetching ${endpoint}:`, error);
+        return null;
+    }
+};
+
+export const getTestimonials = (locale = 'en'): Promise<Testimonial[]> =>
+    fetchStrapiCollection<Testimonial>('testimonials', locale, { sort: ['createdAt:asc'] });
+
+export const getLegalPageBySlug = async (slug: string, locale = 'en'): Promise<LegalPage | null> => {
+    const pages = await fetchStrapiCollection<LegalPage>('legal-pages', locale, {
+        filters: { slug: { $eq: slug } },
+    });
+    return pages[0] || null;
+};
+
+export const getRentalVehicles = (locale = 'en'): Promise<RentalVehicle[]> =>
+    fetchStrapiCollection<RentalVehicle>('rental-vehicles', locale, { sort: ['sortOrder:asc'] });
+
+export const getTransferVehicleCategories = (locale = 'en'): Promise<TransferVehicleCategory[]> =>
+    fetchStrapiCollection<TransferVehicleCategory>('transfer-vehicle-categories', locale);
+
+export const getTransferPriceRoutes = (locale = 'en'): Promise<TransferPriceRoute[]> =>
+    fetchStrapiCollection<TransferPriceRoute>('transfer-price-routes', locale, { sort: ['sortOrder:asc'] });
+
+export const getHomePage = (locale = 'en'): Promise<HomePage | null> =>
+    fetchStrapiSingle<HomePage>('home-page', locale);
+
+export const getAboutPage = (locale = 'en'): Promise<AboutPage | null> =>
+    fetchStrapiSingle<AboutPage>('about-page', locale);
+
+export const getServicesRentalPage = (locale = 'en'): Promise<ServicesRentalPage | null> =>
+    fetchStrapiSingle<ServicesRentalPage>('services-rental-page', locale);
+
+export const getServicesTransferPage = (locale = 'en'): Promise<ServicesTransferPage | null> =>
+    fetchStrapiSingle<ServicesTransferPage>('services-transfer-page', locale);
+
+export const getGlobalSettings = (locale = 'en'): Promise<GlobalSettings | null> =>
+    fetchStrapiSingle<GlobalSettings>('global', locale);

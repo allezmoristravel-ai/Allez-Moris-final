@@ -1,4 +1,5 @@
 import { getAlternates } from "@/lib/seo";
+import { getLegalPageBySlug } from "@/lib/api";
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }) {
     const { lang } = await params;
@@ -9,12 +10,20 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: str
     };
 }
 
-export default async function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage(props: { params: Promise<{ lang: string }> }) {
+    const { lang } = await props.params;
+    const cms = await getLegalPageBySlug("privacy-policy", lang);
+
     return (
         <div className="container mx-auto px-4 py-12 md:py-20 max-w-4xl">
             <h1 className="text-3xl md:text-4xl font-bold mb-8 text-foreground">
-                Privacy Policy
+                {cms?.title || "Privacy Policy"}
             </h1>
+            {cms?.body ? (
+                <div className="bg-card border rounded-xl p-6 md:p-10 shadow-sm text-foreground space-y-6 whitespace-pre-line">
+                    {cms.body}
+                </div>
+            ) : (
             <div className="bg-card border rounded-xl p-6 md:p-10 shadow-sm text-foreground space-y-6">
                 <p><strong>Effective Date:</strong> 12 January 2026</p>
                 <p>At Allez (Moris) Travel Ltd, your privacy matters to us. This policy explains how we collect, use, store, and protect personal information when you use our website or book services with us.</p>
@@ -79,6 +88,7 @@ export default async function PrivacyPolicyPage() {
                     Website: www.allezmoristravel.com
                 </p>
             </div>
+            )}
         </div>
     );
 }

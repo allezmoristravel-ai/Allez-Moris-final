@@ -11,13 +11,11 @@ import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Users, X, Map, Youtube } from "lucide-react";
 import { useState } from "react";
-import { BookingPopup } from "@/components/BookingPopup";
 import { useTranslation } from "react-i18next";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
 
 export default function ActivityDetailClient({ activity, lang, resolvedMapQuery }: { activity: Activity, lang: string, resolvedMapQuery: string | null }) {
   const { t } = useTranslation();
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const images = activity.coverImage
@@ -324,28 +322,18 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
                   </div>
                 </div>
                 <div className="space-y-3">
-                  {activity.isBookable ? (
-                    <Button
-                      size="lg"
-                      className="w-full h-14 text-lg"
-                      onClick={() => setIsBookingOpen(true)}
-                    >
-                      <Calendar className="w-5 h-5 mr-2" /> {t('activity.checkAvailability')}
-                    </Button>
-                  ) : (
-                    <EnquireFormDialog
-                      itemName={activity.title}
-                      type="activity"
-                      trigger={
-                        <Button
-                          size="lg"
-                          className="w-full h-14 text-lg"
-                        >
-                          <Calendar className="w-5 h-5 mr-2" /> {t('activity.enquireNow', { fallback: "Enquire Now" })}
-                        </Button>
-                      }
-                    />
-                  )}
+                  <EnquireFormDialog
+                    itemName={activity.title}
+                    type="activity"
+                    trigger={
+                      <Button
+                        size="lg"
+                        className="w-full h-14 text-lg"
+                      >
+                        <Calendar className="w-5 h-5 mr-2" /> {t('activity.enquireNow', { fallback: "Enquire Now" })}
+                      </Button>
+                    }
+                  />
                 </div>
                 <div className="mt-6 pt-4 border-t border-border">
                   <p className="text-sm text-muted-foreground text-center">{t('activity.freeCancellation')}</p>
@@ -356,12 +344,6 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
           </div>
         </div>
       </section>
-
-      <BookingPopup
-        isOpen={isBookingOpen}
-        onOpenChange={setIsBookingOpen}
-        activity={activity}
-      />
     </div>
   );
 }

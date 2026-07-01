@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
+import { getTransferVehicleCategories, getTransferPriceRoutes, getServicesTransferPage } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
 import {
@@ -47,46 +48,74 @@ export default async function AirportTransferPage(props: { params: Promise<{ lan
     const params = await props.params;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dict: Record<string, any> = await getDictionary(params.lang);
+    const [cmsCategories, cmsRoutes, cmsPage] = await Promise.all([
+        getTransferVehicleCategories(params.lang),
+        getTransferPriceRoutes(params.lang),
+        getServicesTransferPage(params.lang),
+    ]);
 
-    const vehicles = [
-        {
-            type: dict.services.transfer.VehicleCategories.Types.Standard,
-            capacity: dict.services.transfer.VehicleCategories.Capacity.Standard,
-            idealFor: dict.services.transfer.VehicleCategories.IdealFor.Standard,
-            icon: Car,
-            color: "text-blue-500",
-        },
-        {
-            type: dict.services.transfer.VehicleCategories.Types.Family,
-            capacity: dict.services.transfer.VehicleCategories.Capacity.Family,
-            idealFor: dict.services.transfer.VehicleCategories.IdealFor.Family,
-            icon: Users,
-            color: "text-green-500",
-        },
-        {
-            type: dict.services.transfer.VehicleCategories.Types.Coach,
-            capacity: dict.services.transfer.VehicleCategories.Capacity.Coach,
-            idealFor: dict.services.transfer.VehicleCategories.IdealFor.Coach,
-            icon: Bus,
-            color: "text-orange-500",
-        },
-        {
-            type: dict.services.transfer.VehicleCategories.Types.Luxury,
-            capacity: dict.services.transfer.VehicleCategories.Capacity.Luxury,
-            idealFor: dict.services.transfer.VehicleCategories.IdealFor.Luxury,
-            icon: Crown,
-            color: "text-purple-500",
-        },
-    ];
+    const categoryIcon: Record<string, { icon: typeof Car; color: string }> = {
+        standard: { icon: Car, color: "text-blue-500" },
+        family: { icon: Users, color: "text-green-500" },
+        coach: { icon: Bus, color: "text-orange-500" },
+        luxury: { icon: Crown, color: "text-purple-500" },
+    };
 
-    const priceData = [
-        { destination: "Mahebourg (Nearby Airport Area)", standard: "€20", family: "€30", coach: "€65", luxury: "€60" },
-        { destination: "Port Louis (Capital)", standard: "€40", family: "€55", coach: "€95", luxury: "€120" },
-        { destination: "Flic en Flac (West Coast)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
-        { destination: "Grand Baie / North", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
-        { destination: "Le Morne (South-West)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
-        { destination: "Flacq (East)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
-    ];
+    const vehicles = cmsCategories.length > 0
+        ? cmsCategories.map((c) => ({
+            type: c.name,
+            capacity: c.capacity,
+            idealFor: c.idealFor,
+            icon: categoryIcon[c.categoryId]?.icon || Car,
+            color: categoryIcon[c.categoryId]?.color || "text-blue-500",
+        }))
+        : [
+            {
+                type: dict.services.transfer.VehicleCategories.Types.Standard,
+                capacity: dict.services.transfer.VehicleCategories.Capacity.Standard,
+                idealFor: dict.services.transfer.VehicleCategories.IdealFor.Standard,
+                icon: Car,
+                color: "text-blue-500",
+            },
+            {
+                type: dict.services.transfer.VehicleCategories.Types.Family,
+                capacity: dict.services.transfer.VehicleCategories.Capacity.Family,
+                idealFor: dict.services.transfer.VehicleCategories.IdealFor.Family,
+                icon: Users,
+                color: "text-green-500",
+            },
+            {
+                type: dict.services.transfer.VehicleCategories.Types.Coach,
+                capacity: dict.services.transfer.VehicleCategories.Capacity.Coach,
+                idealFor: dict.services.transfer.VehicleCategories.IdealFor.Coach,
+                icon: Bus,
+                color: "text-orange-500",
+            },
+            {
+                type: dict.services.transfer.VehicleCategories.Types.Luxury,
+                capacity: dict.services.transfer.VehicleCategories.Capacity.Luxury,
+                idealFor: dict.services.transfer.VehicleCategories.IdealFor.Luxury,
+                icon: Crown,
+                color: "text-purple-500",
+            },
+        ];
+
+    const priceData = cmsRoutes.length > 0
+        ? cmsRoutes.map((r) => ({
+            destination: r.destination,
+            standard: r.standardPrice,
+            family: r.familyPrice,
+            coach: r.coachPrice,
+            luxury: r.luxuryPrice,
+        }))
+        : [
+            { destination: "Mahebourg (Nearby Airport Area)", standard: "€20", family: "€30", coach: "€65", luxury: "€60" },
+            { destination: "Port Louis (Capital)", standard: "€40", family: "€55", coach: "€95", luxury: "€120" },
+            { destination: "Flic en Flac (West Coast)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
+            { destination: "Grand Baie / North", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
+            { destination: "Le Morne (South-West)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
+            { destination: "Flacq (East)", standard: "€50", family: "€60", coach: "€125", luxury: "€120" },
+        ];
 
     const inclusions = Object.values(dict.services.transfer.Inclusions.List) as string[];
 
@@ -98,13 +127,13 @@ export default async function AirportTransferPage(props: { params: Promise<{ lan
                     <div className="max-w-4xl mx-auto text-center">
                         <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-6">
                             <Plane className="w-5 h-5 text-primary" />
-                            <span className="font-medium text-primary">{dict.services.transfer.Badge}</span>
+                            <span className="font-medium text-primary">{cmsPage?.badge || dict.services.transfer.Badge}</span>
                         </div>
                         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                            {dict.services.transfer.Title}
+                            {cmsPage?.title || dict.services.transfer.Title}
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-                            {dict.services.transfer.Description}
+                            {cmsPage?.description || dict.services.transfer.Description}
                         </p>
                     </div>
                 </div>

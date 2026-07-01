@@ -5,8 +5,9 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import type { Testimonial } from "@/types/strapi";
 
-const testimonials = [
+const fallbackTestimonials = [
   {
     id: 1,
     name: "Sarah L.",
@@ -33,17 +34,35 @@ const testimonials = [
   },
 ];
 
-const TestimonialsSection = () => {
+interface TestimonialsSectionProps {
+  testimonials?: Testimonial[];
+  title?: string;
+  subtitle?: string;
+  ctaLabel?: string;
+}
+
+const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: TestimonialsSectionProps) => {
+  const items = testimonials && testimonials.length > 0
+    ? testimonials.map((t) => ({
+        id: t.id,
+        name: t.customerName,
+        location: t.location,
+        rating: t.rating,
+        text: t.quote,
+        avatar: t.customerName?.charAt(0) || "?",
+      }))
+    : fallbackTestimonials;
+
   return (
     <section id="about" className="py-16 md:py-24 bg-transparent">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Our Happy Travelers
+            {title || "Our Happy Travelers"}
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Real stories from travelers who discovered Mauritius with us.
+            {subtitle || "Real stories from travelers who discovered Mauritius with us."}
           </p>
         </div>
 
@@ -55,7 +74,7 @@ const TestimonialsSection = () => {
           className="w-full mb-10"
         >
           <CarouselContent className="-ml-4 md:-ml-8">
-            {testimonials.map((testimonial) => (
+            {items.map((testimonial) => (
               <CarouselItem key={testimonial.id} className="pl-4 md:pl-8 md:basis-1/3">
                 <div className="bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
                   {/* Rating */}
@@ -98,7 +117,7 @@ const TestimonialsSection = () => {
         {/* CTA */}
         <div className="text-center">
           <Button variant="default" size="lg">
-            Read More Reviews →
+            {ctaLabel || "Read More Reviews →"}
           </Button>
         </div>
       </div>
