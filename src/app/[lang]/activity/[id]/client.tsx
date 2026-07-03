@@ -109,7 +109,7 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
                 {/* Highlights badge removed as it's not in Strapi type directly */}
                 <Badge variant="secondary" className="capitalize">{categoryName}</Badge>
               </div>
-              <h1 className="font-serif text-3xl md:text-5xl font-bold text-accent mb-4">{activity.title}</h1>
+              <h1 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">{activity.title}</h1>
               <div className="flex flex-wrap items-center gap-4 md:gap-6 text-accent/90">
                 <div className="flex items-center gap-1">
                   <Clock className="w-5 h-5" /> <span>{activity.duration}</span>
@@ -314,7 +314,7 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
 
             {/* RIGHT COLUMN: Booking Card */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-card rounded-2xl shadow-lg p-6">
+              <div className="sticky top-24 bg-card rounded-2xl shadow-lg p-6 border border-border/50">
                 <div className="mb-6">
                   <div className="flex items-baseline gap-2">
                     <span className="text-3xl font-bold text-foreground">{currency}{price}</span>

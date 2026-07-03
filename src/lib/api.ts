@@ -685,6 +685,13 @@ export const getLegalPageBySlug = async (slug: string, locale = 'en'): Promise<L
 export const getRentalVehicles = (locale = 'en'): Promise<RentalVehicle[]> =>
     fetchStrapiCollection<RentalVehicle>('rental-vehicles', locale, { sort: ['sortOrder:asc'] });
 
+export const getRentalVehicleBySlug = async (slug: string, locale = 'en'): Promise<RentalVehicle | null> => {
+    const vehicles = await fetchStrapiCollection<RentalVehicle>('rental-vehicles', locale, {
+        filters: { vehicleId: { $eq: slug } },
+    });
+    return vehicles[0] || null;
+};
+
 export const getTransferVehicleCategories = (locale = 'en'): Promise<TransferVehicleCategory[]> =>
     fetchStrapiCollection<TransferVehicleCategory>('transfer-vehicle-categories', locale);
 

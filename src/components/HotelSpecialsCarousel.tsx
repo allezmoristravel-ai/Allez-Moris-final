@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import {
     Carousel,
     CarouselContent,
@@ -9,118 +10,154 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
-import EnquireFormDialog from "@/components/EnquireFormDialog";
+import Link from "next/link";
 import { getStrapiMedia } from "@/lib/api";
-import type { StrapiAccommodation } from "@/types/strapi";
+import type { StrapiAccommodation, RentalVehicle } from "@/types/strapi";
 
-interface HotelSpecial {
+interface DealItem {
     id: number;
     name: string;
-    category: "hotel" | "apartment";
+    category: "hotel" | "apartment" | "car";
+    region: string;
     rating: number;
-    price: number;
-    originalPrice?: number;
+    priceDisplay: string;
+    originalPriceDisplay?: string;
+    discountPercent?: number;
     location: string;
     image: string;
     description: string;
     amenities: string[];
+    detailPath: string;
 }
 
 interface HotelSpecialsCarouselProps {
     deals?: StrapiAccommodation[];
+    rentalDeals?: RentalVehicle[];
     title?: string;
     subtitle?: string;
+    lang: string;
 }
 
-// No real per-property rating exists on the Accommodation content type yet —
-// shown as a fixed placeholder until/unless a `rating` field is added in Strapi.
 const PLACEHOLDER_RATING = 4.8;
 
-const mapDealToHotelSpecial = (a: StrapiAccommodation): HotelSpecial => ({
-    id: a.id,
-    name: a.title,
-    category: a.propertyType?.toLowerCase().includes("apartment") ? "apartment" : "hotel",
-    rating: PLACEHOLDER_RATING,
-    price: a.discountPrice ?? a.pricePerNight,
-    originalPrice: a.originalPrice,
-    location: a.location,
-    image: getStrapiMedia(a.coverImages?.[0]?.url) || "/category-stay.jpg",
-    description: a.description,
-    amenities: (a.features || "").split("\n").map((f) => f.replace(/^[-*•]\s*/, "").trim()).filter(Boolean),
-});
+const mapAccommodationToDeal = (a: StrapiAccommodation, lang: string): DealItem => {
+    const price = a.discountPrice ?? a.pricePerNight;
+    const original = a.originalPrice;
+    return {
+        id: a.id,
+        name: a.title,
+        category: a.propertyType?.toLowerCase().includes("apartment") ? "apartment" : "hotel",
+        region: a.region || "",
+        rating: PLACEHOLDER_RATING,
+        priceDisplay: `$${price}`,
+        originalPriceDisplay: original != null ? `$${original}` : undefined,
+        discountPercent: original && price ? Math.round(((original - price) / original) * 100) : undefined,
+        location: a.location,
+        image: getStrapiMedia(a.coverImages?.[0]?.url) || "/category-stay.jpg",
+        description: a.description,
+        amenities: (a.features || "").split("\n").map((f) => f.replace(/^[-*•]\s*/, "").trim()).filter(Boolean),
+        detailPath: `/${lang}/services/stay/${a.slug}`,
+    };
+};
 
-const HotelSpecialsCarousel = ({ deals, title, subtitle }: HotelSpecialsCarouselProps) => {
-    // Mock hotel data fallback — used until real "isDeal" accommodations exist in Strapi
-    const mockHotels: HotelSpecial[] = [
-        {
-            id: 1,
-            name: "Beachfront Paradise Resort",
-            category: "hotel",
-            rating: 4.8,
-            price: 180,
-            originalPrice: 220,
-            location: "Trou aux Biches",
-            image: "/category-stay.jpg",
-            description: "Luxury beachfront resort with all amenities",
-            amenities: ["Pool", "Spa", "Beach Access"],
-        },
-        {
-            id: 2,
-            name: "Mountain View Apartments",
-            category: "apartment",
-            rating: 4.6,
-            price: 95,
-            originalPrice: 120,
-            location: "Moka",
-            image: "/category-sea.jpg",
-            description: "Cozy apartments with stunning mountain views",
-            amenities: ["Kitchen", "WiFi", "Balcony"],
-        },
-        {
-            id: 3,
-            name: "Coastal Elegance Hotel",
-            category: "hotel",
-            rating: 4.9,
-            price: 210,
-            originalPrice: 260,
-            location: "Bel Ombre",
-            image: "/category-land.jpg",
-            description: "Premium hotel with world-class services",
-            amenities: ["Restaurant", "Gym", "Concierge"],
-        },
-        {
-            id: 4,
-            name: "Urban Studio Apartments",
-            category: "apartment",
-            rating: 4.5,
-            price: 75,
-            originalPrice: 95,
-            location: "Port Louis",
-            image: "/category-air.jpg",
-            description: "Modern apartments in the heart of the city",
-            amenities: ["Modern Design", "Public Transport", "Shops Nearby"],
-        },
-        {
-            id: 5,
-            name: "Sunset Harbor Hotel",
-            category: "hotel",
-            rating: 4.7,
-            price: 165,
-            originalPrice: 200,
-            location: "Grand Baie",
-            image: "/category-rental.jpg",
-            description: "Charming hotel with sunset beach access",
-            amenities: ["Beach Bar", "Water Sports", "Sunset Views"],
-        },
-    ];
+const mapRentalToDeal = (v: RentalVehicle, lang: string): DealItem => {
+    const parseNum = (s?: string) => parseFloat((s || "0").replace(/[^0-9.]/g, "")) || 0;
+    const price = parseNum(v.discountPrice || v.price);
+    const original = v.originalPrice ? parseNum(v.originalPrice) : undefined;
+    return {
+        id: v.id,
+        name: v.title,
+        category: "car",
+        region: v.region || "",
+        rating: PLACEHOLDER_RATING,
+        priceDisplay: v.discountPrice || v.price,
+        originalPriceDisplay: v.originalPrice || undefined,
+        discountPercent: original && price ? Math.round(((original - price) / original) * 100) : undefined,
+        location: v.region || "Mauritius",
+        image: getStrapiMedia(v.coverImages?.[0]?.url ?? v.image?.url) || "/category-rental.jpg",
+        description: v.description,
+        amenities: Array.isArray(v.features) ? v.features.slice(0, 3) : [],
+        detailPath: `/${lang}/services/rental/${v.vehicleId}`,
+    };
+};
 
-    const hotels: HotelSpecial[] = deals && deals.length > 0
-        ? deals.map(mapDealToHotelSpecial)
-        : mockHotels;
+const mockDeals = (lang: string): DealItem[] => [
+    {
+        id: 1, name: "Beachfront Paradise Resort", category: "hotel", region: "North", rating: 4.8,
+        priceDisplay: "$180", originalPriceDisplay: "$220", discountPercent: 18,
+        location: "Trou aux Biches", image: "/category-stay.jpg",
+        description: "Luxury beachfront resort with all amenities",
+        amenities: ["Pool", "Spa", "Beach Access"], detailPath: `/${lang}/services/stay`,
+    },
+    {
+        id: 2, name: "Mountain View Apartments", category: "apartment", region: "Central", rating: 4.6,
+        priceDisplay: "$95", originalPriceDisplay: "$120", discountPercent: 21,
+        location: "Moka", image: "/category-sea.jpg",
+        description: "Cozy apartments with stunning mountain views",
+        amenities: ["Kitchen", "WiFi", "Balcony"], detailPath: `/${lang}/services/stay`,
+    },
+    {
+        id: 3, name: "Coastal Elegance Hotel", category: "hotel", region: "South", rating: 4.9,
+        priceDisplay: "$210", originalPriceDisplay: "$260", discountPercent: 19,
+        location: "Bel Ombre", image: "/category-land.jpg",
+        description: "Premium hotel with world-class services",
+        amenities: ["Restaurant", "Gym", "Concierge"], detailPath: `/${lang}/services/stay`,
+    },
+    {
+        id: 4, name: "Urban Studio Apartments", category: "apartment", region: "Central", rating: 4.5,
+        priceDisplay: "$75", originalPriceDisplay: "$95", discountPercent: 21,
+        location: "Port Louis", image: "/category-air.jpg",
+        description: "Modern apartments in the heart of the city",
+        amenities: ["Modern Design", "Public Transport", "Shops Nearby"], detailPath: `/${lang}/services/stay`,
+    },
+    {
+        id: 5, name: "Sunset Harbor Hotel", category: "hotel", region: "North", rating: 4.7,
+        priceDisplay: "$165", originalPriceDisplay: "$200", discountPercent: 18,
+        location: "Grand Baie", image: "/category-rental.jpg",
+        description: "Charming hotel with sunset beach access",
+        amenities: ["Beach Bar", "Water Sports", "Sunset Views"], detailPath: `/${lang}/services/stay`,
+    },
+];
 
-    if (hotels.length === 0) {
-        return null;
-    }
+const HotelSpecialsCarousel = ({ deals, rentalDeals, title, subtitle, lang }: HotelSpecialsCarouselProps) => {
+    const [activeType, setActiveType] = useState<string>("all");
+    const [activeRegion, setActiveRegion] = useState<string>("all");
+
+    const allDeals = useMemo<DealItem[]>(() => {
+        const hasData = (deals && deals.length > 0) || (rentalDeals && rentalDeals.length > 0);
+        if (!hasData) return mockDeals(lang);
+
+        const acc = deals ? deals.map((a) => mapAccommodationToDeal(a, lang)) : [];
+        const cars = rentalDeals ? rentalDeals.map((v) => mapRentalToDeal(v, lang)) : [];
+        return [...acc, ...cars];
+    }, [deals, rentalDeals, lang]);
+
+    const typeCategories = useMemo(() => {
+        const cats: { key: string; label: string }[] = [
+            { key: "all", label: "All" },
+            { key: "hotel", label: "Hotels" },
+            { key: "apartment", label: "Apartments" },
+        ];
+        if (allDeals.some((d) => d.category === "car")) {
+            cats.push({ key: "car", label: "Cars" });
+        }
+        return cats;
+    }, [allDeals]);
+
+    const regions = useMemo(() => {
+        const unique = Array.from(new Set(allDeals.map((d) => d.region).filter(Boolean))).sort();
+        return unique;
+    }, [allDeals]);
+
+    const filtered = useMemo(() => {
+        return allDeals.filter((d) => {
+            const typeMatch = activeType === "all" || d.category === activeType;
+            const regionMatch = activeRegion === "all" || d.region === activeRegion;
+            return typeMatch && regionMatch;
+        });
+    }, [allDeals, activeType, activeRegion]);
+
+    if (allDeals.length === 0) return null;
 
     return (
         <section id="hotel-specials" className="py-16 md:py-24 bg-transparent">
@@ -136,57 +173,74 @@ const HotelSpecialsCarousel = ({ deals, title, subtitle }: HotelSpecialsCarousel
                         ))}
                     </div>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        {subtitle || "Discover our best accommodation deals for your Mauritius getaway"}
+                        {subtitle || "Discover our best deals for your Mauritius getaway"}
                     </p>
                 </div>
 
-                {/* Filter Tabs */}
-                <div className="flex justify-center gap-4 mb-8">
-                    <Button variant="outline" className="rounded-full">
-                        All
-                    </Button>
-                    <Button variant="outline" className="rounded-full">
-                        Hotels
-                    </Button>
-                    <Button variant="outline" className="rounded-full">
-                        Apartments
-                    </Button>
+                {/* Type Filter */}
+                <div className="flex justify-center gap-2 mb-4 flex-wrap">
+                    {typeCategories.map((cat) => (
+                        <Button
+                            key={cat.key}
+                            variant={activeType === cat.key ? "default" : "outline"}
+                            className="rounded-full"
+                            onClick={() => setActiveType(cat.key)}
+                        >
+                            {cat.label}
+                        </Button>
+                    ))}
                 </div>
 
-                <Carousel
-                    opts={{
-                        align: "start",
-                        loop: true,
-                    }}
-                    className="w-full"
-                >
-                    <CarouselContent>
-                            {hotels.map((hotel) => (
+                {/* Region Filter — only shown when 2+ distinct regions exist */}
+                {regions.length >= 2 && (
+                    <div className="flex justify-center gap-2 mb-8 flex-wrap">
+                        <Button
+                            variant={activeRegion === "all" ? "default" : "outline"}
+                            className="rounded-full text-sm"
+                            onClick={() => setActiveRegion("all")}
+                        >
+                            All Regions
+                        </Button>
+                        {regions.map((r) => (
+                            <Button
+                                key={r}
+                                variant={activeRegion === r ? "default" : "outline"}
+                                className="rounded-full text-sm capitalize"
+                                onClick={() => setActiveRegion(r)}
+                            >
+                                {r}
+                            </Button>
+                        ))}
+                    </div>
+                )}
+
+                {filtered.length === 0 ? (
+                    <p className="text-center text-muted-foreground py-12">No deals match the selected filters.</p>
+                ) : (
+                    <Carousel opts={{ align: "start", loop: true }} className="w-full">
+                        <CarouselContent>
+                            {filtered.map((item) => (
                                 <CarouselItem
-                                    key={hotel.id}
+                                    key={`${item.category}-${item.id}`}
                                     className="basis-[85%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
                                 >
-                                    <div className="h-full block">
+                                    <div className="h-full">
                                         <div className="bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow group h-full flex flex-col">
-                                            {/* Image with Badge */}
+                                            {/* Image */}
                                             <div className="relative h-48 overflow-hidden shrink-0">
                                                 <Image
-                                                    src={hotel.image}
-                                                    alt={hotel.name}
+                                                    src={item.image}
+                                                    alt={item.name}
                                                     fill
                                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
-
-                                                {/* Category Badge */}
                                                 <Badge className="absolute top-3 left-3 capitalize">
-                                                    {hotel.category}
+                                                    {item.category}
                                                 </Badge>
-
-                                                {/* Discount Badge */}
-                                                {hotel.originalPrice && (
+                                                {item.discountPercent != null && (
                                                     <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                                        -{Math.round(((hotel.originalPrice - hotel.price) / hotel.originalPrice) * 100)}%
+                                                        -{item.discountPercent}%
                                                     </div>
                                                 )}
                                             </div>
@@ -194,71 +248,63 @@ const HotelSpecialsCarousel = ({ deals, title, subtitle }: HotelSpecialsCarousel
                                             {/* Content */}
                                             <div className="p-4 flex flex-col flex-1">
                                                 <h3 className="font-serif text-lg font-bold mb-1 line-clamp-2">
-                                                    {hotel.name}
+                                                    {item.name}
                                                 </h3>
 
-                                                {/* Location */}
                                                 <div className="flex items-center gap-1 text-sm text-muted-foreground mb-3">
                                                     <MapPin className="w-4 h-4" />
-                                                    {hotel.location}
+                                                    {item.location}
                                                 </div>
 
-                                                {/* Rating */}
                                                 <div className="flex items-center gap-2 mb-3">
                                                     <div className="flex">
                                                         {[...Array(5)].map((_, i) => (
                                                             <Star
                                                                 key={i}
                                                                 className={`w-4 h-4 ${
-                                                                    i < Math.floor(hotel.rating)
+                                                                    i < Math.floor(item.rating)
                                                                         ? "fill-primary text-primary"
                                                                         : "text-muted-foreground"
                                                                 }`}
                                                             />
                                                         ))}
                                                     </div>
-                                                    <span className="text-sm font-semibold">{hotel.rating}</span>
+                                                    <span className="text-sm font-semibold">{item.rating}</span>
                                                 </div>
 
-                                                {/* Price */}
                                                 <div className="flex items-baseline gap-2 mb-4">
                                                     <span className="text-2xl font-bold text-primary">
-                                                        ${hotel.price}
+                                                        {item.priceDisplay}
                                                     </span>
-                                                    {hotel.originalPrice && (
+                                                    {item.originalPriceDisplay && (
                                                         <span className="text-sm text-muted-foreground line-through">
-                                                            ${hotel.originalPrice}
+                                                            {item.originalPriceDisplay}
                                                         </span>
                                                     )}
-                                                    <span className="text-xs text-muted-foreground">/night</span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {item.category === "car" ? "/day" : "/night"}
+                                                    </span>
                                                 </div>
 
-                                                {/* Amenities */}
                                                 <div className="flex flex-wrap gap-1 mb-4">
-                                                    {hotel.amenities.slice(0, 2).map((amenity, idx) => (
+                                                    {item.amenities.slice(0, 2).map((amenity, idx) => (
                                                         <Badge key={idx} variant="secondary" className="text-xs">
                                                             {amenity}
                                                         </Badge>
                                                     ))}
                                                 </div>
 
-                                                {/* CTA Button */}
-                                                <EnquireFormDialog
-                                                    itemName={hotel.name}
-                                                    type="accommodation"
-                                                    trigger={
-                                                        <Button className="w-full mt-auto">
-                                                            Pre-Book
-                                                        </Button>
-                                                    }
-                                                />
+                                                <Link href={item.detailPath} className="mt-auto">
+                                                    <Button className="w-full">View Details</Button>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
                                 </CarouselItem>
                             ))}
-                    </CarouselContent>
-                </Carousel>
+                        </CarouselContent>
+                    </Carousel>
+                )}
             </div>
         </section>
     );

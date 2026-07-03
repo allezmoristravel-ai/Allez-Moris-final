@@ -171,6 +171,11 @@ export interface RentalVehicle {
     features: string[];
     sortOrder?: number;
     locale: string;
+    isDeal?: boolean;
+    discountPrice?: string;
+    originalPrice?: string;
+    region?: string;
+    coverImages?: CloudImage[];
 }
 
 export interface TransferVehicleCategory {
