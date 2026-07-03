@@ -5,7 +5,7 @@ import { accommodations as localAccommodations } from '@/data/accommodations';
 import {
     Activity, Category, StrapiResponse, ContactDetails, StrapiAccommodation,
     Testimonial, LegalPage, RentalVehicle, TransferVehicleCategory, TransferPriceRoute,
-    HomePage, AboutPage, ServicesRentalPage, ServicesTransferPage, GlobalSettings,
+    HomePage, AboutPage, ServicesRentalPage, ServicesTransferPage, GlobalSettings, HolidayPackage,
 } from '@/types/strapi';
 import { ENABLED_LOCALES, DEFAULT_LOCALE } from '@/config/i18n.config';
 import { cache } from 'react';
@@ -690,6 +690,16 @@ export const getRentalVehicleBySlug = async (slug: string, locale = 'en'): Promi
         filters: { vehicleId: { $eq: slug } },
     });
     return vehicles[0] || null;
+};
+
+export const getHolidayPackages = (locale = 'en'): Promise<HolidayPackage[]> =>
+    fetchStrapiCollection<HolidayPackage>('holiday-packages', locale, { sort: ['sortOrder:asc'] });
+
+export const getHolidayPackageBySlug = async (slug: string, locale = 'en'): Promise<HolidayPackage | null> => {
+    const packages = await fetchStrapiCollection<HolidayPackage>('holiday-packages', locale, {
+        filters: { slug: { $eq: slug } },
+    });
+    return packages[0] || null;
 };
 
 export const getTransferVehicleCategories = (locale = 'en'): Promise<TransferVehicleCategory[]> =>

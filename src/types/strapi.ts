@@ -178,6 +178,32 @@ export interface RentalVehicle {
     coverImages?: CloudImage[];
 }
 
+export interface HolidayPackage {
+    id: number;
+    documentId: string;
+    title: string;
+    slug: string;
+    region: string;
+    packageType: string; // hotel | villa | apartment | resort
+    price: number;
+    originalPrice?: number;
+    discountPrice?: number;
+    isDeal?: boolean;
+    isFeatured?: boolean;
+    location: string;
+    duration: string;
+    maxGuests?: number;
+    description: string;
+    overview?: string;
+    highlights?: string;
+    inclusions?: string;
+    exclusions?: string;
+    features?: string[];
+    coverImages?: CloudImage[];
+    sortOrder?: number;
+    locale: string;
+}
+
 export interface TransferVehicleCategory {
     id: number;
     documentId: string;

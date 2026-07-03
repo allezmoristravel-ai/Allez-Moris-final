@@ -12,7 +12,7 @@ import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getStrapiMedia } from "@/lib/api";
-import type { StrapiAccommodation, RentalVehicle } from "@/types/strapi";
+import type { HolidayPackage, RentalVehicle } from "@/types/strapi";
 
 interface DealItem {
     id: number;
@@ -31,7 +31,7 @@ interface DealItem {
 }
 
 interface HotelSpecialsCarouselProps {
-    deals?: StrapiAccommodation[];
+    holidayPackages?: HolidayPackage[];
     rentalDeals?: RentalVehicle[];
     title?: string;
     subtitle?: string;
@@ -40,23 +40,24 @@ interface HotelSpecialsCarouselProps {
 
 const PLACEHOLDER_RATING = 4.8;
 
-const mapAccommodationToDeal = (a: StrapiAccommodation, lang: string): DealItem => {
-    const price = a.discountPrice ?? a.pricePerNight;
-    const original = a.originalPrice;
+const mapHolidayPackageToDeal = (p: HolidayPackage, lang: string): DealItem => {
+    const displayPrice = p.discountPrice ?? p.price;
+    const original = p.originalPrice;
+    const isHotelType = p.packageType === "hotel" || p.packageType === "resort";
     return {
-        id: a.id,
-        name: a.title,
-        category: a.propertyType?.toLowerCase().includes("apartment") ? "apartment" : "hotel",
-        region: a.region || "",
+        id: p.id,
+        name: p.title,
+        category: isHotelType ? "hotel" : "apartment",
+        region: p.region || "",
         rating: PLACEHOLDER_RATING,
-        priceDisplay: `$${price}`,
+        priceDisplay: `$${displayPrice}`,
         originalPriceDisplay: original != null ? `$${original}` : undefined,
-        discountPercent: original && price ? Math.round(((original - price) / original) * 100) : undefined,
-        location: a.location,
-        image: getStrapiMedia(a.coverImages?.[0]?.url) || "/category-stay.jpg",
-        description: a.description,
-        amenities: (a.features || "").split("\n").map((f) => f.replace(/^[-*•]\s*/, "").trim()).filter(Boolean),
-        detailPath: `/${lang}/services/stay/${a.slug}`,
+        discountPercent: original && displayPrice ? Math.round(((original - displayPrice) / original) * 100) : undefined,
+        location: p.location,
+        image: getStrapiMedia(p.coverImages?.[0]?.url) || "/category-stay.jpg",
+        description: p.description,
+        amenities: Array.isArray(p.features) ? p.features.slice(0, 3) : [],
+        detailPath: `/${lang}/services/packages/${p.slug}`,
     };
 };
 
@@ -119,18 +120,18 @@ const mockDeals = (lang: string): DealItem[] => [
     },
 ];
 
-const HotelSpecialsCarousel = ({ deals, rentalDeals, title, subtitle, lang }: HotelSpecialsCarouselProps) => {
+const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, lang }: HotelSpecialsCarouselProps) => {
     const [activeType, setActiveType] = useState<string>("all");
     const [activeRegion, setActiveRegion] = useState<string>("all");
 
     const allDeals = useMemo<DealItem[]>(() => {
-        const hasData = (deals && deals.length > 0) || (rentalDeals && rentalDeals.length > 0);
+        const hasData = (holidayPackages && holidayPackages.length > 0) || (rentalDeals && rentalDeals.length > 0);
         if (!hasData) return mockDeals(lang);
 
-        const acc = deals ? deals.map((a) => mapAccommodationToDeal(a, lang)) : [];
+        const pkgs = holidayPackages ? holidayPackages.map((p) => mapHolidayPackageToDeal(p, lang)) : [];
         const cars = rentalDeals ? rentalDeals.map((v) => mapRentalToDeal(v, lang)) : [];
-        return [...acc, ...cars];
-    }, [deals, rentalDeals, lang]);
+        return [...pkgs, ...cars];
+    }, [holidayPackages, rentalDeals, lang]);
 
     const typeCategories = useMemo(() => {
         const cats: { key: string; label: string }[] = [
