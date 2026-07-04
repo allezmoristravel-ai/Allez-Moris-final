@@ -35,19 +35,19 @@ export default function AccommodationDetailClient({ accommodation, lang, dict }:
                 const url = new URL(urlStr);
                 const q = url.searchParams.get("q") || url.searchParams.get("query");
                 if (q) {
-                    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(q)}`;
+                    return `https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${encodeURIComponent(q)}`;
                 }
                 // Handle place/ID paths
                 const pathMatch = urlStr.match(/place\/([^/]+)/);
                 if (pathMatch) {
-                    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(pathMatch[1])}`;
+                    return `https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${encodeURIComponent(pathMatch[1])}`;
                 }
             }
 
             // If it's not a parseable URL or doesn't have a query, 
             // treat the locationUrl itself as a search query if it's not too long
             if (urlStr.length < 100) {
-                return `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(urlStr + ", Mauritius")}`;
+                return `https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${encodeURIComponent(urlStr + ", Mauritius")}`;
             }
         } catch (e) {
             console.error("[MAP] Error parsing locationUrl:", e);

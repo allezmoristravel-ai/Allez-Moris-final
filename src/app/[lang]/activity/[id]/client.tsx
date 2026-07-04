@@ -30,7 +30,7 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
 
   // Build embed URL from server-resolved coordinates
   const mapEmbedUrl = resolvedMapQuery
-    ? `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(resolvedMapQuery)}&language=${lang}`
+    ? `https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY}&q=${encodeURIComponent(resolvedMapQuery)}&language=${lang}`
     : null;
 
   // Map rich text strings (markdown) to arrays if valid, otherwise empty array

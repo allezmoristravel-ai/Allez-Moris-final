@@ -634,7 +634,7 @@ const fetchStrapiCollection = async <T>(
     const url = `${getBaseUrl()}/${endpoint}?${query}`;
 
     try {
-        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 3600 } });
+        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 300 } });
         if (response.status === 404) return [];
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const json = await response.json();
@@ -657,7 +657,7 @@ const fetchStrapiSingle = async <T>(endpoint: string, locale: string): Promise<T
     const url = `${getBaseUrl()}/${endpoint}?${query}`;
 
     try {
-        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 3600 } });
+        const response = await fetch(url, { headers: getHeaders(), next: { revalidate: 300 } });
         if (response.status === 404) return null;
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const json = await response.json();
