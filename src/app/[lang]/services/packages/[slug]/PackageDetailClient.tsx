@@ -64,11 +64,11 @@ export default function PackageDetailClient({ pkg, lang }: PackageDetailClientPr
             <section className="relative pt-0">
                 <div className="relative">
                     <Link
-                        href={`/${lang}/#hotel-specials`}
+                        href={`/${lang}`}
                         className="absolute top-8 left-4 md:left-8 flex items-center gap-2 text-white hover:text-white/80 transition-colors z-20 bg-foreground/30 backdrop-blur-sm rounded-full px-4 py-2"
                     >
                         <ChevronLeft className="w-5 h-5" />
-                        <span>Back to Packages</span>
+                        <span>Back to Home</span>
                     </Link>
 
                     {images.length >= 5 ? (

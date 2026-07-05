@@ -1,9 +1,8 @@
-import { getContactDetails, getCategories, getTestimonials, getHomePage, getRentalVehicles } from "@/lib/api";
+import { getContactDetails, getCategories, getTestimonials, getHomePage } from "@/lib/api";
 import HeroSection from "@/components/HeroSection";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import TopToursCarousel from "@/components/TopToursCarousel";
 import TestimonialsSection from "@/components/TestimonialsSection";
-import HotelSpecialsCarousel from "@/components/HotelSpecialsCarousel";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
@@ -47,11 +46,7 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
     { id: 5, documentId: "stay", slug: "stay", name: "Stay" },
   ];
 
-  const [testimonials, rentalVehicles] = await Promise.all([
-    getTestimonials(params.lang),
-    getRentalVehicles(params.lang),
-  ]);
-  const rentalDeals = rentalVehicles.filter((v) => v.isDeal);
+  const testimonials = await getTestimonials(params.lang);
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -84,10 +79,6 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
         categories={categories}
         title={homePage?.categorySectionTitle}
         subtitle={homePage?.categorySectionSubtitle}
-      />
-      <HotelSpecialsCarousel
-        rentalDeals={rentalDeals}
-        lang={params.lang}
       />
       <TopToursCarousel />
       <TestimonialsSection
