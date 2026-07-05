@@ -1,4 +1,4 @@
-import { getContactDetails, getCategories, getTestimonials, getHomePage, getRentalVehicles, getHolidayPackages } from "@/lib/api";
+import { getContactDetails, getCategories, getTestimonials, getHomePage, getRentalVehicles } from "@/lib/api";
 import HeroSection from "@/components/HeroSection";
 import CategoryCarousel from "@/components/CategoryCarousel";
 import TopToursCarousel from "@/components/TopToursCarousel";
@@ -47,9 +47,8 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
     { id: 5, documentId: "stay", slug: "stay", name: "Stay" },
   ];
 
-  const [testimonials, holidayPackages, rentalVehicles] = await Promise.all([
+  const [testimonials, rentalVehicles] = await Promise.all([
     getTestimonials(params.lang),
-    getHolidayPackages(params.lang),
     getRentalVehicles(params.lang),
   ]);
   const rentalDeals = rentalVehicles.filter((v) => v.isDeal);
@@ -87,11 +86,8 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
         subtitle={homePage?.categorySectionSubtitle}
       />
       <HotelSpecialsCarousel
-        holidayPackages={holidayPackages}
         rentalDeals={rentalDeals}
         lang={params.lang}
-        title={homePage?.holidayPackagesTitle}
-        subtitle={homePage?.holidayPackagesSubtitle}
       />
       <TopToursCarousel />
       <TestimonialsSection

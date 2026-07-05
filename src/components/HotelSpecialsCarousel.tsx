@@ -12,12 +12,12 @@ import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getStrapiMedia } from "@/lib/api";
-import type { HolidayPackage, RentalVehicle } from "@/types/strapi";
+import type { RentalVehicle } from "@/types/strapi";
 
 interface DealItem {
     id: number;
     name: string;
-    category: "hotel" | "apartment" | "car";
+    category: "car";
     region: string;
     rating: number;
     priceDisplay: string;
@@ -31,7 +31,6 @@ interface DealItem {
 }
 
 interface HotelSpecialsCarouselProps {
-    holidayPackages?: HolidayPackage[];
     rentalDeals?: RentalVehicle[];
     title?: string;
     subtitle?: string;
@@ -39,27 +38,6 @@ interface HotelSpecialsCarouselProps {
 }
 
 const PLACEHOLDER_RATING = 4.8;
-
-const mapHolidayPackageToDeal = (p: HolidayPackage, lang: string): DealItem => {
-    const displayPrice = p.discountPrice ?? p.price;
-    const original = p.originalPrice;
-    const isHotelType = p.packageType === "hotel" || p.packageType === "resort";
-    return {
-        id: p.id,
-        name: p.title,
-        category: isHotelType ? "hotel" : "apartment",
-        region: p.region || "",
-        rating: PLACEHOLDER_RATING,
-        priceDisplay: `$${displayPrice}`,
-        originalPriceDisplay: original != null ? `$${original}` : undefined,
-        discountPercent: original && displayPrice ? Math.round(((original - displayPrice) / original) * 100) : undefined,
-        location: p.location,
-        image: getStrapiMedia(p.coverImages?.[0]?.url) || "/category-stay.jpg",
-        description: p.description,
-        amenities: Array.isArray(p.features) ? p.features.slice(0, 3) : [],
-        detailPath: `/${lang}/services/packages/${p.slug}`,
-    };
-};
 
 const mapRentalToDeal = (v: RentalVehicle, lang: string): DealItem => {
     const parseNum = (s?: string) => parseFloat((s || "0").replace(/[^0-9.]/g, "")) || 0;
@@ -84,66 +62,35 @@ const mapRentalToDeal = (v: RentalVehicle, lang: string): DealItem => {
 
 const mockDeals = (lang: string): DealItem[] => [
     {
-        id: 1, name: "Beachfront Paradise Resort", category: "hotel", region: "North", rating: 4.8,
-        priceDisplay: "$180", originalPriceDisplay: "$220", discountPercent: 18,
-        location: "Trou aux Biches", image: "/category-stay.jpg",
-        description: "Luxury beachfront resort with all amenities",
-        amenities: ["Pool", "Spa", "Beach Access"], detailPath: `/${lang}/services/stay`,
-    },
-    {
-        id: 2, name: "Mountain View Apartments", category: "apartment", region: "Central", rating: 4.6,
-        priceDisplay: "$95", originalPriceDisplay: "$120", discountPercent: 21,
-        location: "Moka", image: "/category-sea.jpg",
-        description: "Cozy apartments with stunning mountain views",
-        amenities: ["Kitchen", "WiFi", "Balcony"], detailPath: `/${lang}/services/stay`,
-    },
-    {
-        id: 3, name: "Coastal Elegance Hotel", category: "hotel", region: "South", rating: 4.9,
-        priceDisplay: "$210", originalPriceDisplay: "$260", discountPercent: 19,
-        location: "Bel Ombre", image: "/category-land.jpg",
-        description: "Premium hotel with world-class services",
-        amenities: ["Restaurant", "Gym", "Concierge"], detailPath: `/${lang}/services/stay`,
-    },
-    {
-        id: 4, name: "Urban Studio Apartments", category: "apartment", region: "Central", rating: 4.5,
-        priceDisplay: "$75", originalPriceDisplay: "$95", discountPercent: 21,
-        location: "Port Louis", image: "/category-air.jpg",
-        description: "Modern apartments in the heart of the city",
-        amenities: ["Modern Design", "Public Transport", "Shops Nearby"], detailPath: `/${lang}/services/stay`,
-    },
-    {
-        id: 5, name: "Sunset Harbor Hotel", category: "hotel", region: "North", rating: 4.7,
-        priceDisplay: "$165", originalPriceDisplay: "$200", discountPercent: 18,
+        id: 1, name: "Compact City Runabout", category: "car", region: "North", rating: 4.8,
+        priceDisplay: "€25", originalPriceDisplay: "€32", discountPercent: 22,
         location: "Grand Baie", image: "/category-rental.jpg",
-        description: "Charming hotel with sunset beach access",
-        amenities: ["Beach Bar", "Water Sports", "Sunset Views"], detailPath: `/${lang}/services/stay`,
+        description: "Fuel-efficient compact car, perfect for getting around town",
+        amenities: ["A/C", "Bluetooth", "Automatic"], detailPath: `/${lang}/services/rental`,
+    },
+    {
+        id: 2, name: "Family SUV", category: "car", region: "Central", rating: 4.6,
+        priceDisplay: "€45", originalPriceDisplay: "€58", discountPercent: 22,
+        location: "Port Louis", image: "/category-rental.jpg",
+        description: "Spacious SUV with room for the whole family and luggage",
+        amenities: ["7 Seats", "A/C", "GPS"], detailPath: `/${lang}/services/rental`,
+    },
+    {
+        id: 3, name: "Convertible Coastal Cruiser", category: "car", region: "South", rating: 4.9,
+        priceDisplay: "€60", originalPriceDisplay: "€75", discountPercent: 20,
+        location: "Bel Ombre", image: "/category-rental.jpg",
+        description: "Open-top convertible ideal for scenic coastal drives",
+        amenities: ["Convertible", "A/C", "Automatic"], detailPath: `/${lang}/services/rental`,
     },
 ];
 
-const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, lang }: HotelSpecialsCarouselProps) => {
-    const [activeType, setActiveType] = useState<string>("all");
+const HotelSpecialsCarousel = ({ rentalDeals, title, subtitle, lang }: HotelSpecialsCarouselProps) => {
     const [activeRegion, setActiveRegion] = useState<string>("all");
 
     const allDeals = useMemo<DealItem[]>(() => {
-        const hasData = (holidayPackages && holidayPackages.length > 0) || (rentalDeals && rentalDeals.length > 0);
-        if (!hasData) return mockDeals(lang);
-
-        const pkgs = holidayPackages ? holidayPackages.map((p) => mapHolidayPackageToDeal(p, lang)) : [];
-        const cars = rentalDeals ? rentalDeals.map((v) => mapRentalToDeal(v, lang)) : [];
-        return [...pkgs, ...cars];
-    }, [holidayPackages, rentalDeals, lang]);
-
-    const typeCategories = useMemo(() => {
-        const cats: { key: string; label: string }[] = [
-            { key: "all", label: "All" },
-            { key: "hotel", label: "Hotels" },
-            { key: "apartment", label: "Apartments" },
-        ];
-        if (allDeals.some((d) => d.category === "car")) {
-            cats.push({ key: "car", label: "Cars" });
-        }
-        return cats;
-    }, [allDeals]);
+        if (!rentalDeals || rentalDeals.length === 0) return mockDeals(lang);
+        return rentalDeals.map((v) => mapRentalToDeal(v, lang));
+    }, [rentalDeals, lang]);
 
     const regions = useMemo(() => {
         const unique = Array.from(new Set(allDeals.map((d) => d.region).filter(Boolean))).sort();
@@ -151,12 +98,8 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
     }, [allDeals]);
 
     const filtered = useMemo(() => {
-        return allDeals.filter((d) => {
-            const typeMatch = activeType === "all" || d.category === activeType;
-            const regionMatch = activeRegion === "all" || d.region === activeRegion;
-            return typeMatch && regionMatch;
-        });
-    }, [allDeals, activeType, activeRegion]);
+        return allDeals.filter((d) => activeRegion === "all" || d.region === activeRegion);
+    }, [allDeals, activeRegion]);
 
     if (allDeals.length === 0) return null;
 
@@ -166,7 +109,7 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                 {/* Section Header */}
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-                        {title || "Holiday Packages"}
+                        {title || "Rental Deals"}
                     </h2>
                     <div className="flex items-center justify-center gap-2 mb-4">
                         {[...Array(5)].map((_, i) => (
@@ -174,22 +117,8 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                         ))}
                     </div>
                     <p className="text-muted-foreground max-w-xl mx-auto">
-                        {subtitle || "Discover our best deals for your Mauritius getaway"}
+                        {subtitle || "Discover our best rental car deals for your Mauritius trip"}
                     </p>
-                </div>
-
-                {/* Type Filter */}
-                <div className="flex justify-center gap-2 mb-4 flex-wrap">
-                    {typeCategories.map((cat) => (
-                        <Button
-                            key={cat.key}
-                            variant={activeType === cat.key ? "default" : "outline"}
-                            className="rounded-full"
-                            onClick={() => setActiveType(cat.key)}
-                        >
-                            {cat.label}
-                        </Button>
-                    ))}
                 </div>
 
                 {/* Region Filter — only shown when 2+ distinct regions exist */}
@@ -236,9 +165,6 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                                                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                                                 />
                                                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent" />
-                                                <Badge className="absolute top-3 left-3 capitalize">
-                                                    {item.category}
-                                                </Badge>
                                                 {item.discountPercent != null && (
                                                     <div className="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                                                         -{item.discountPercent}%
@@ -283,7 +209,7 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                                                         </span>
                                                     )}
                                                     <span className="text-xs text-muted-foreground">
-                                                        {item.category === "car" ? "/day" : "/night"}
+                                                        /day
                                                     </span>
                                                 </div>
 

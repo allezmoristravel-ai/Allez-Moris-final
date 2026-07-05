@@ -564,7 +564,7 @@ export default function ItineraryBuilderPage() {
                         )}
                         {activity.activity_id !== "rest" && activity.price != null && (
                           <span className="text-sm font-medium text-primary px-1 py-0.5 rounded-md">
-                            {activity.price.toLocaleString()} $
+                            €{activity.price.toLocaleString()}
                           </span>
                         )}
                       </div>
