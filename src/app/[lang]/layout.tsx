@@ -10,6 +10,7 @@ import I18nProvider from "@/components/i18n-provider";
 import { getDictionary } from "@/lib/i18n";
 import { getAlternates } from "@/lib/seo";
 import { getContactDetails, getGlobalSettings } from "@/lib/api";
+import Chatbot from "@/components/Chatbot";
 
 const sans = Open_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const serif = Montserrat({ subsets: ["latin"], variable: "--font-serif" });
@@ -80,6 +81,7 @@ export default async function RootLayout(props: {
                         </main>
                         <Footer contactDetails={contactDetails} footerHelpLinks={globalSettings?.footerHelpLinks} />
                     </Providers>
+                    <Chatbot />
                 </I18nProvider>
                 <Script
                     id="chatbase-widget"
