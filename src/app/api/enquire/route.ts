@@ -5,10 +5,14 @@ import { supabase } from '@/lib/supabase';
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { full_name, email, phone, adults, children, start_date, end_date, message, itemName, type } = body;
+        const { full_name, email, phone, adults, children, start_date, end_date, message, itemName, type, accepted_terms } = body;
 
         if (!full_name || !email || !phone || !start_date) {
             return NextResponse.json({ error: 'Name, email, phone and start date are required' }, { status: 400 });
+        }
+
+        if (accepted_terms !== true) {
+            return NextResponse.json({ error: 'You must accept the Terms and Conditions' }, { status: 400 });
         }
 
         // booking.requests columns now map 1:1 to the form fields.

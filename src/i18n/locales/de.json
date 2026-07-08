@@ -678,7 +678,10 @@
     "prebookTitle": "Vorbuchen",
     "prebookSubmit": "Vorbuchung bestätigen",
     "prebookSuccess": "Vorbuchung erhalten!",
-    "prebookSuccessDesc": "Ihr Platz ist reserviert. Wir senden Ihnen innerhalb von 24 Stunden die Zahlungsdetails zur Bestätigung."
+    "prebookSuccessDesc": "Ihr Platz ist reserviert. Wir senden Ihnen innerhalb von 24 Stunden die Zahlungsdetails zur Bestätigung.",
+    "termsTitle": "Allgemeine Geschäftsbedingungen",
+    "termsAccept": "Ich habe die Allgemeinen Geschäftsbedingungen gelesen und akzeptiere sie.",
+    "termsError": "Sie müssen die Allgemeinen Geschäftsbedingungen akzeptieren, bevor Sie das Formular absenden."
   },
   "aboutUs": {
     "hero": {

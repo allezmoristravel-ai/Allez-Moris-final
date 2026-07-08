@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Dialog,
@@ -19,6 +21,7 @@ import { CalendarIcon, Loader2, Send, CheckCircle2 } from "lucide-react";
 import { format, addDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import TermsAndConditionsContent from "@/components/TermsAndConditionsContent";
 
 interface EnquireFormDialogProps {
     itemName: string;
@@ -43,6 +46,8 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
     const [message, setMessage] = useState("");
     const [isStartDateOpen, setIsStartDateOpen] = useState(false);
     const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [termsError, setTermsError] = useState(false);
 
     const hasEndDate = type === "accommodation" || type === "rental";
 
@@ -55,12 +60,20 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
         setStartDate(addDays(new Date(), 1));
         setEndDate(addDays(new Date(), 3));
         setMessage("");
+        setAcceptedTerms(false);
+        setTermsError(false);
         setIsSuccess(false);
         setError(null);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!acceptedTerms) {
+            setTermsError(true);
+            return;
+        }
+        setTermsError(false);
         setIsLoading(true);
         setError(null);
 
@@ -79,6 +92,7 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                     message,
                     itemName,
                     type,
+                    accepted_terms: acceptedTerms,
                 }),
             });
 
@@ -299,12 +313,40 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                             />
                         </div>
 
+                        <div className="space-y-2">
+                            <Label>
+                                {t("enquireForm.termsTitle", { fallback: "Terms and Conditions" })} *
+                            </Label>
+                            <ScrollArea className="h-40 rounded-lg border bg-muted/20 p-4">
+                                <TermsAndConditionsContent />
+                            </ScrollArea>
+                            <div className="flex items-start gap-2 pt-1">
+                                <Checkbox
+                                    id="enquire-terms"
+                                    checked={acceptedTerms}
+                                    onCheckedChange={(checked) => {
+                                        setAcceptedTerms(checked === true);
+                                        if (checked === true) setTermsError(false);
+                                    }}
+                                    className="mt-0.5"
+                                />
+                                <Label htmlFor="enquire-terms" className="font-normal text-sm leading-snug cursor-pointer">
+                                    {t("enquireForm.termsAccept", { fallback: "I have read and accept the Terms and Conditions." })}
+                                </Label>
+                            </div>
+                            {termsError && (
+                                <p className="text-sm text-red-500">
+                                    {t("enquireForm.termsError", { fallback: "You must accept the Terms and Conditions before submitting." })}
+                                </p>
+                            )}
+                        </div>
+
                         {error && (
                             <p className="text-sm text-red-500">{error}</p>
                         )}
 
                         <div className="pt-2">
-                            <Button type="submit" className="w-full h-12 text-base font-medium rounded-xl" disabled={isLoading}>
+                            <Button type="submit" className="w-full h-12 text-base font-medium rounded-xl" disabled={isLoading || !acceptedTerms}>
                                 {isLoading ? (
                                     <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Sending...</>
                                 ) : (
