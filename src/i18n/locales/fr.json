@@ -595,26 +595,6 @@
             "West": "Ouest"
         }
     },
-    "chatbot": {
-        "title": "Ravi",
-        "welcomeMessage": "Bonjour, je suis Ravi, votre assistant de voyage. Comment puis-je vous aider aujourd'hui ?",
-        "defaultQuestions": {
-            "question1": "Sorties en catamaran ?",
-            "question2": "Comment vous contacter ?",
-            "question3": "Activités de plongée ?",
-            "question4": "Quel type d'expériences proposez-vous ?",
-            "question5": "Pouvez-vous m'aider à réserver un hébergement ?",
-            "question6": "Quelles sont vos activités les plus populaires ?",
-            "question7": "Comment fonctionne la création de circuit par l'IA ?",
-            "question8": "Puis-je modifier l'itinéraire proposé ?",
-            "question9": "Comment puis-je contacter Allez Moris ?"
-        },
-        "inputPlaceholder": "Tapez votre message...",
-        "sendButton": "Envoyer",
-        "messages": {
-            "errorSendingMessage": "Échec de l'envoi du message. Veuillez réessayer."
-        }
-    },
     "booking": {
         "bookActivity": "Réserver l'activité",
         "fullName": "Nom complet",

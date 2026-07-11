@@ -593,26 +593,6 @@
       "West": "West"
     }
   },
-  "chatbot": {
-    "title": "Ravi",
-    "welcomeMessage": "Hi I'm Ravi, your travel assistant how can i help you today ?",
-    "defaultQuestions": {
-      "question1": "Catamaran trips?",
-      "question2": "How to contact you?",
-      "question3": "Diving activities?",
-      "question4": "What kind of experiences do you offer?",
-      "question5": "Can you help me book accommodation?",
-      "question6": "What are your most popular activities?",
-      "question7": "How does the AI tour creation work?",
-      "question8": "Can I modify the proposed itinerary?",
-      "question9": "How can I contact Allez Moris?"
-    },
-    "inputPlaceholder": "Type your message...",
-    "sendButton": "Send",
-    "messages": {
-      "errorSendingMessage": "Failed to send message. Please try again."
-    }
-  },
   "booking": {
     "bookActivity": "Book Activity",
     "fullName": "Full Name",
