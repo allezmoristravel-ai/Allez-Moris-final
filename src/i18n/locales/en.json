@@ -116,7 +116,9 @@
     "title": "Allez-Moris Top 10 Tours",
     "description": "Handpicked experiences that capture the true essence of Mauritius.",
     "viewDetails": "View Details",
-    "perPerson": "/ person"
+    "perPerson": "/ person",
+    "perAdult": "/adult",
+    "perChild": "/child"
   },
   "bucketList": {
     "title": "Build My Bucket List",

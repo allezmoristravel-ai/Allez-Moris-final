@@ -102,7 +102,7 @@ export default async function ActivityPage(props: { params: Promise<{ id: string
         image: imageUrl ? [imageUrl] : [],
         offers: {
             '@type': 'Offer',
-            price: activity.publicPrice,
+            price: activity.adultPrice,
             priceCurrency: 'EUR',
             availability: 'https://schema.org/InStock'
         }

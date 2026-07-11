@@ -261,10 +261,10 @@ export default function PackageDetailClient({ pkg, lang }: PackageDetailClientPr
                                 <div className="mb-6">
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-3xl font-bold text-foreground">€{displayPrice}</span>
-                                        <span className="text-muted-foreground">/ night</span>
+                                        <span className="text-muted-foreground">/ person</span>
                                     </div>
                                     {pkg.originalPrice && (
-                                        <p className="text-sm text-muted-foreground line-through mt-0.5">€{pkg.originalPrice} / night</p>
+                                        <p className="text-sm text-muted-foreground line-through mt-0.5">€{pkg.originalPrice} / person</p>
                                     )}
                                     {pkg.duration && (
                                         <p className="text-sm text-muted-foreground mt-1">{pkg.duration}</p>

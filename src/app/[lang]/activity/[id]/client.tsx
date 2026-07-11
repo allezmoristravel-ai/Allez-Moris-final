@@ -13,6 +13,7 @@ import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Users, X, Map, Youtu
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
+import { ActivityPriceDisplay } from "@/components/ActivityPriceDisplay";
 
 export default function ActivityDetailClient({ activity, lang, resolvedMapQuery }: { activity: Activity, lang: string, resolvedMapQuery: string | null }) {
   const { t } = useTranslation();
@@ -39,8 +40,6 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
   const inclusionsList = activity.inclusions ? activity.inclusions.split('\n').filter(s => s.trim()) : [];
   const exclusionsList = activity.exclusions ? activity.exclusions.split('\n').filter(s => s.trim()) : [];
 
-  const price = activity.publicPrice;
-  const currency = "€";
   const groupSize = activity.maxPersons ? `Up to ${activity.maxPersons}` : 'Small Group';
 
   return (
@@ -316,10 +315,11 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
             <div className="lg:col-span-1">
               <div className="sticky top-24 bg-card rounded-2xl shadow-lg p-6 border border-border/50">
                 <div className="mb-6">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-foreground">{currency}{price}</span>
-                    {!activity.isGroupPrice && <span className="text-muted-foreground">{t('tours.perPerson')}</span>}
-                  </div>
+                  <ActivityPriceDisplay
+                    activity={activity}
+                    labels={{ perAdult: t('tours.perAdult'), perChild: t('tours.perChild') }}
+                    variant="details"
+                  />
                 </div>
                 <div className="space-y-3">
                   <EnquireFormDialog

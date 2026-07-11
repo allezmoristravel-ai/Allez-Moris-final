@@ -116,7 +116,9 @@
     "title": "Allez-Moris Top 10 Touren",
     "description": "Handverlesene Erlebnisse, die die wahre Essenz von Mauritius einfangen.",
     "viewDetails": "Details anzeigen",
-    "perPerson": "/ Person"
+    "perPerson": "/ Person",
+    "perAdult": "/Erwachsener",
+    "perChild": "/Kind"
   },
   "bucketList": {
     "title": "Meine Wunschliste erstellen",

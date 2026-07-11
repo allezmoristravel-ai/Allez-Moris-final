@@ -3,13 +3,15 @@ import { NavigationButton } from "@/components/NavigationButton";
 import { Star, Clock, Users, MapPin } from "lucide-react";
 import { Activity } from "@/types/strapi";
 import { getStrapiMedia } from "@/lib/api";
+import { ActivityPriceDisplay } from "@/components/ActivityPriceDisplay";
 
 interface ActivityCardProps {
     activity: Activity;
     showCategoryBadge?: boolean;
     labels: {
         viewDetails: string;
-        perPerson: string;
+        perAdult: string;
+        perChild: string;
     };
     lang: string;
     regionTranslation?: string;
@@ -18,7 +20,6 @@ interface ActivityCardProps {
 export const ActivityCard = ({ activity, showCategoryBadge = true, labels, lang, regionTranslation }: ActivityCardProps) => {
     const imageUrl = getStrapiMedia(activity.coverImage?.[0]?.url) || "/category-sea.jpg"; // Fallback image
     const categoryName = activity.category?.name || 'Tour';
-    const price = activity.publicPrice;
 
     return (
         <div className="bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow h-full flex flex-col">
@@ -89,16 +90,8 @@ export const ActivityCard = ({ activity, showCategoryBadge = true, labels, lang,
                 </div>
 
                 {/* Price & CTA */}
-                <div className="mt-auto flex items-center justify-between">
-                    <div>
-                        <span className="text-2xl font-bold text-foreground">
-                            €{price}
-                        </span>
-                        <span className="text-muted-foreground text-sm">
-                            {" "}
-                            {!activity.isGroupPrice && labels.perPerson}
-                        </span>
-                    </div>
+                <div className="mt-auto flex items-center justify-between gap-3">
+                    <ActivityPriceDisplay activity={activity} labels={labels} variant="card" />
                     <NavigationButton href={`/${lang}/activity/${activity.slug}`} variant="default" size="sm">
                         {labels.viewDetails}
                     </NavigationButton>

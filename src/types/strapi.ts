@@ -68,13 +68,13 @@ export interface Activity {
     bookingWidget?: string;
 
     // Pricing & Capacity
-    publicPrice: number;
+    adultPrice: number;
     publicPriceMur?: number;
     netRate?: number;
     maxPersons?: number;
     price?: string; // Legacy string field if used
     isGroupPrice?: boolean;
-    childPrice?: number;
+    childPrice?: number | null;
 
     // Media & Relations
     coverImage?: CloudImage[];

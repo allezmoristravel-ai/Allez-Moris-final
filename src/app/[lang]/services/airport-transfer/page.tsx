@@ -120,7 +120,7 @@ export default async function AirportTransferPage(props: { params: Promise<{ lan
     const inclusions = Object.values(dict.services.transfer.Inclusions.List) as string[];
 
     return (
-        <div className="bg-[url('/sand-background-phone.png')] md:bg-[url('/sand_background.png')] bg-cover bg-fixed bg-center bg-no-repeat min-h-screen pb-20">
+        <div className="bg-[url('/sand-background-phone.webp')] md:bg-[url('/sand_background.webp')] bg-cover md:bg-fixed bg-center bg-no-repeat min-h-screen pb-20">
             {/* Hero Section */}
             <section className="relative py-20 md:py-32">
                 <div className="container mx-auto px-4">

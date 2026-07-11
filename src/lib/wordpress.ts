@@ -73,7 +73,7 @@ class WordPressAPI {
             ? customData.price
             : parseFloat(customData.price || '');
 
-        const publicPrice = mappedPrice || parseFloat(node.price?.replace(/[^0-9.]/g, '')) || 0;
+        const adultPrice = mappedPrice || parseFloat(node.price?.replace(/[^0-9.]/g, '')) || 0;
 
         return {
             id: node.slug,
@@ -90,11 +90,11 @@ class WordPressAPI {
             duration: localized.duration || 'Flexible',
             region: localized.region || '',
             bookingWidget: '',
-            publicPrice,
+            adultPrice,
             netRate: undefined,
             publicPriceMur: undefined,
             maxPersons: customData.max_persons ? Number(customData.max_persons) : undefined,
-            price: publicPrice ? `€${publicPrice}` : '€0',
+            price: adultPrice ? `€${adultPrice}` : '€0',
             isGroupPrice: false,
             childPrice: undefined,
             coverImage: node.image ? [{

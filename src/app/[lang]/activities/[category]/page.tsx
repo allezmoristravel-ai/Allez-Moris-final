@@ -70,7 +70,8 @@ export default async function ActivityCategoryPage(props: { params: Promise<{ la
                     lang={params.lang}
                     translations={{
                         viewDetails: t("tours.viewDetails"),
-                        perPerson: t("tours.perPerson"),
+                        perAdult: t("tours.perAdult"),
+                        perChild: t("tours.perChild"),
                         filterByRegion: t("itineraryBuilder.common.filterByRegion", "Filter by Region"),
                         allRegions: t("itineraryBuilder.common.allRegions", "All Regions"),
                         sortBy: t("itineraryBuilder.common.sortBy", "Sort by..."),

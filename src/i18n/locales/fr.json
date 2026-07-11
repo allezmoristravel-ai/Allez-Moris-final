@@ -116,7 +116,9 @@
         "title": "Le Top 10 d'Allez-Moris",
         "description": "Des expériences triées sur le volet qui capturent l'essence même de l'île Maurice.",
         "viewDetails": "Voir les détails",
-        "perPerson": "/ personne"
+        "perPerson": "/ personne",
+        "perAdult": "/adulte",
+        "perChild": "/enfant"
     },
     "bucketList": {
         "title": "Créer ma liste de rêve",

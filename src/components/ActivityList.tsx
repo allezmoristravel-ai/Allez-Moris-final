@@ -26,7 +26,8 @@ interface ActivityListProps {
     lang: string;
     translations: {
         viewDetails: string;
-        perPerson: string;
+        perAdult: string;
+        perChild: string;
         filterByRegion: string;
         allRegions: string;
         sortBy: string;
@@ -124,9 +125,9 @@ export function ActivityList({ activities, category, initialPagination, lang, tr
             result = result.filter(a => a.region === selectedRegion);
         }
         if (sortBy === "priceAsc") {
-            result = [...result].sort((a, b) => a.publicPrice - b.publicPrice);
+            result = [...result].sort((a, b) => a.adultPrice - b.adultPrice);
         } else if (sortBy === "priceDesc") {
-            result = [...result].sort((a, b) => b.publicPrice - a.publicPrice);
+            result = [...result].sort((a, b) => b.adultPrice - a.adultPrice);
         }
         return result;
     }, [items, selectedRegion, sortBy]);
@@ -200,7 +201,8 @@ export function ActivityList({ activities, category, initialPagination, lang, tr
                                 showCategoryBadge={false}
                                 labels={{
                                     viewDetails: translations.viewDetails,
-                                    perPerson: translations.perPerson
+                                    perAdult: translations.perAdult,
+                                    perChild: translations.perChild
                                 }}
                                 lang={lang}
                                 regionTranslation={activity.region ? translations.regions[activity.region] || activity.region : undefined}

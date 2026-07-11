@@ -92,7 +92,8 @@ const TopToursCarousel = () => {
                                         showCategoryBadge={true}
                                         labels={{
                                             viewDetails: t("tours.viewDetails"),
-                                            perPerson: t("tours.perPerson")
+                                            perAdult: t("tours.perAdult"),
+                                            perChild: t("tours.perChild")
                                         }}
                                         lang={i18n.language ? i18n.language.split('-')[0] : 'en'}
                                         regionTranslation={tour.region ? t(`itineraryBuilder.regions.${tour.region}`, tour.region) : undefined}
