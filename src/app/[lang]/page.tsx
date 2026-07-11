@@ -86,6 +86,13 @@ export default async function Home(props: { params: Promise<{ lang: string }> })
         title={homePage?.categorySectionTitle}
         subtitle={homePage?.categorySectionSubtitle}
       />
+      <HotelSpecialsCarousel
+        holidayPackages={holidayPackages}
+        rentalDeals={rentalDeals}
+        lang={params.lang}
+        title={homePage?.holidayPackagesTitle}
+        subtitle={homePage?.holidayPackagesSubtitle}
+      />
       <TopToursCarousel />
       <HotelSpecialsCarousel
         holidayPackages={holidayPackages}

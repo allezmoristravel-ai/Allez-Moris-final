@@ -682,7 +682,10 @@
         "prebookTitle": "Pré-réserver",
         "prebookSubmit": "Confirmer la pré-réservation",
         "prebookSuccess": "Pré-réservation reçue !",
-        "prebookSuccessDesc": "Votre place est réservée. Nous vous enverrons les détails de paiement dans les 24 heures pour la confirmer."
+        "prebookSuccessDesc": "Votre place est réservée. Nous vous enverrons les détails de paiement dans les 24 heures pour la confirmer.",
+        "termsTitle": "Conditions générales",
+        "termsAccept": "J'ai lu et j'accepte les conditions générales.",
+        "termsError": "Vous devez accepter les conditions générales avant de soumettre la demande."
     },
     "aboutUs": {
         "hero": {

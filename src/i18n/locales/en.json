@@ -680,7 +680,10 @@
     "prebookTitle": "Pre-book",
     "prebookSubmit": "Confirm Pre-booking",
     "prebookSuccess": "Pre-booking Received!",
-    "prebookSuccessDesc": "Your spot is reserved. We'll send you payment details within 24 hours to confirm it."
+    "prebookSuccessDesc": "Your spot is reserved. We'll send you payment details within 24 hours to confirm it.",
+    "termsTitle": "Terms and Conditions",
+    "termsAccept": "I have read and accept the Terms and Conditions.",
+    "termsError": "You must accept the Terms and Conditions before submitting."
   },
   "aboutUs": {
     "hero": {
