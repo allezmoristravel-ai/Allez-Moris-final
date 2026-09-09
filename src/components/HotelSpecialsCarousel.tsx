@@ -166,7 +166,7 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                 {/* Section Header */}
                 <div className="text-center mb-12">
                     <h2 className="font-serif text-3xl md:text-4xl font-bold text-foreground mb-4">
-                        {title || "Holiday Packages"}
+                        {title || "Holiday Packages - South Africa 🇿🇦"}
                     </h2>
                     <div className="flex items-center justify-center gap-2 mb-4">
                         {[...Array(5)].map((_, i) => (

@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -5,6 +8,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { Testimonial } from "@/types/strapi";
 
 const fallbackTestimonials = [
@@ -34,6 +43,8 @@ const fallbackTestimonials = [
   },
 ];
 
+const TEXT_TRUNCATE_LENGTH = 160;
+
 interface TestimonialsSectionProps {
   testimonials?: Testimonial[];
   title?: string;
@@ -42,6 +53,8 @@ interface TestimonialsSectionProps {
 }
 
 const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: TestimonialsSectionProps) => {
+  const [activeReview, setActiveReview] = useState<(typeof fallbackTestimonials)[number] | null>(null);
+
   const items = testimonials && testimonials.length > 0
     ? testimonials.map((t) => ({
         id: t.id,
@@ -74,43 +87,55 @@ const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: Testim
           className="w-full mb-10"
         >
           <CarouselContent className="-ml-4 md:-ml-8">
-            {items.map((testimonial) => (
-              <CarouselItem key={testimonial.id} className="pl-4 md:pl-8 md:basis-1/3">
-                <div className="bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-                  {/* Rating */}
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-5 h-5 fill-primary text-primary"
-                      />
-                    ))}
-                  </div>
-
-                  {/* Quote */}
-                  <p className="text-foreground mb-6 leading-relaxed flex-1">
-                    &ldquo;{testimonial.text}&rdquo;
-                  </p>
-
-                  {/* Author */}
-                  <div className="flex items-center gap-3 mt-auto">
-                    <div className="w-12 h-12 rounded-full bg-ocean flex items-center justify-center flex-shrink-0">
-                      <span className="text-ocean-foreground font-bold text-lg">
-                        {testimonial.avatar}
-                      </span>
+            {items.map((testimonial) => {
+              const isLong = testimonial.text.length > TEXT_TRUNCATE_LENGTH;
+              return (
+                <CarouselItem key={testimonial.id} className="pl-4 md:pl-8 md:basis-1/3">
+                  <div className="bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow aspect-square flex flex-col">
+                    {/* Rating */}
+                    <div className="flex gap-1 mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="w-5 h-5 fill-primary text-primary"
+                        />
+                      ))}
                     </div>
-                    <div>
-                      <p className="font-semibold text-foreground">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {testimonial.location}
-                      </p>
+
+                    {/* Quote */}
+                    <p className="text-foreground mb-4 leading-relaxed flex-1 line-clamp-5">
+                      &ldquo;{testimonial.text}&rdquo;
+                    </p>
+
+                    {isLong && (
+                      <button
+                        onClick={() => setActiveReview(testimonial)}
+                        className="text-sm font-medium text-primary hover:underline text-left mb-4 self-start"
+                      >
+                        Read More
+                      </button>
+                    )}
+
+                    {/* Author */}
+                    <div className="flex items-center gap-3 mt-auto">
+                      <div className="w-12 h-12 rounded-full bg-ocean flex items-center justify-center flex-shrink-0">
+                        <span className="text-ocean-foreground font-bold text-lg">
+                          {testimonial.avatar}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-foreground">
+                          {testimonial.name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {testimonial.location}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CarouselItem>
-            ))}
+                </CarouselItem>
+              );
+            })}
           </CarouselContent>
         </Carousel>
 
@@ -121,6 +146,32 @@ const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: Testim
           </Button>
         </div>
       </div>
+
+      {/* Full Review Dialog */}
+      <Dialog open={activeReview !== null} onOpenChange={(open) => !open && setActiveReview(null)}>
+        <DialogContent className="w-[95vw] max-w-xl max-h-[85dvh] p-6 sm:p-8">
+          {activeReview && (
+            <>
+              <DialogHeader className="space-y-3 pr-6">
+                <div className="flex gap-1">
+                  {[...Array(activeReview.rating)].map((_, i) => (
+                    <Star key={i} className="w-6 h-6 fill-primary text-primary" />
+                  ))}
+                </div>
+                <div className="space-y-1">
+                  <DialogTitle className="text-2xl">{activeReview.name}</DialogTitle>
+                  <p className="text-sm text-muted-foreground">{activeReview.location}</p>
+                </div>
+              </DialogHeader>
+              <div className="overflow-y-auto pr-2 -mr-2 mt-6 flex-1">
+                <p className="text-foreground text-lg leading-loose">
+                  &ldquo;{activeReview.text}&rdquo;
+                </p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
