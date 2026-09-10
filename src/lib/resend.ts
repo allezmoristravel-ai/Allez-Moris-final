@@ -33,7 +33,14 @@ export const sendBucketListEmail = async (data: {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("API Error Response:", errorText);
-      return { success: false, error: `Server error: ${response.status}` };
+      let message = `Server error: ${response.status}`;
+      try {
+        const parsed = JSON.parse(errorText);
+        if (parsed?.error) message = parsed.error;
+      } catch {
+        // response wasn't JSON — keep the generic message
+      }
+      return { success: false, error: message };
     }
 
 

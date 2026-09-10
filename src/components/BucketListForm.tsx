@@ -83,6 +83,16 @@ const BucketListForm = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!formData.country) {
+            toast({
+                title: "Error",
+                description: t("bucketList.form.selectCountry"),
+                variant: "destructive",
+            });
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
