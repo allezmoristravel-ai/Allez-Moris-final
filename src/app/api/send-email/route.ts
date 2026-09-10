@@ -37,7 +37,9 @@ export async function POST(req: Request) {
 
     if (supabaseError) {
       console.error("Supabase insert error:", supabaseError);
-      return NextResponse.json({ error: 'Failed to save bucket list submission' }, { status: 500 });
+      // TEMP DEBUG: surfacing the raw Supabase error to the client to diagnose
+      // the production 500. Revert to a generic message once resolved.
+      return NextResponse.json({ error: `Failed to save bucket list submission: ${supabaseError.message}` }, { status: 500 });
     }
 
     // Email notification is best-effort — Supabase is the source of truth for the submission.
