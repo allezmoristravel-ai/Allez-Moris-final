@@ -37,9 +37,7 @@ export async function POST(req: Request) {
 
     if (supabaseError) {
       console.error("Supabase insert error:", supabaseError);
-      // TEMP DEBUG: surfacing the raw Supabase error to the client to diagnose
-      // the production 500. Revert to a generic message once resolved.
-      return NextResponse.json({ error: `Failed to save bucket list submission: ${supabaseError.message}` }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to save bucket list submission' }, { status: 500 });
     }
 
     // Email notification is best-effort — Supabase is the source of truth for the submission.
@@ -89,12 +87,16 @@ export async function POST(req: Request) {
 
       if (error) {
         console.error("Bucket list email error:", error);
+        // TEMP DEBUG: surfacing the Resend error to diagnose missing emails.
+        // Revert once resolved — email failures should stay best-effort/silent.
+        return NextResponse.json({ success: true, emailDebugError: error });
       }
 
       return NextResponse.json({ success: true, data });
     } catch (emailError) {
       console.error("Bucket list email error:", emailError);
-      return NextResponse.json({ success: true });
+      // TEMP DEBUG: see comment above.
+      return NextResponse.json({ success: true, emailDebugError: String(emailError) });
     }
   } catch (error) {
     console.error("Bucket list submission error:", error);
