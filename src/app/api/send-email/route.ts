@@ -1,7 +1,7 @@
 
 import { Resend } from 'resend';
 import { NextResponse } from 'next/server';
-import { supabaseBucketList } from '@/lib/supabaseBucketList';
+import { getSupabaseBucketList } from '@/lib/supabaseBucketList';
 
 export async function POST(req: Request) {
   try {
@@ -10,6 +10,14 @@ export async function POST(req: Request) {
 
     if (!name || !email || !phone || !country) {
       return NextResponse.json({ error: 'Name, email, phone and country are required' }, { status: 400 });
+    }
+
+    let supabaseBucketList;
+    try {
+      supabaseBucketList = getSupabaseBucketList();
+    } catch (configError) {
+      console.error("Bucket list Supabase config error:", configError);
+      return NextResponse.json({ error: 'Bucket list submissions are not configured on the server' }, { status: 500 });
     }
 
     const { error: supabaseError } = await supabaseBucketList.from('bucket_list_submissions').insert({
