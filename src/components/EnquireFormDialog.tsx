@@ -22,6 +22,8 @@ import { format, addDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import TermsAndConditionsContent from "@/components/TermsAndConditionsContent";
+import { PhoneInput } from "@/components/ui/phone-input";
+import { isValidPhoneNumber } from "react-phone-number-input";
 
 interface EnquireFormDialogProps {
     itemName: string;
@@ -38,7 +40,8 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
-    const [phone, setPhone] = useState("");
+    const [phone, setPhone] = useState<string | undefined>(undefined);
+    const [phoneError, setPhoneError] = useState(false);
     const [adults, setAdults] = useState("2");
     const [children, setChildren] = useState("0");
     const [startDate, setStartDate] = useState<Date | undefined>(addDays(new Date(), 1));
@@ -54,7 +57,8 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
     const resetForm = () => {
         setFullName("");
         setEmail("");
-        setPhone("");
+        setPhone(undefined);
+        setPhoneError(false);
         setAdults("2");
         setChildren("0");
         setStartDate(addDays(new Date(), 1));
@@ -68,6 +72,12 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!phone || !isValidPhoneNumber(phone)) {
+            setPhoneError(true);
+            return;
+        }
+        setPhoneError(false);
 
         if (!acceptedTerms) {
             setTermsError(true);
@@ -178,14 +188,22 @@ export default function EnquireFormDialog({ itemName, type, trigger }: EnquireFo
                             <Label htmlFor="enquire-phone">
                                 {t("enquireForm.phone", { fallback: "Phone" })} *
                             </Label>
-                            <Input
+                            <PhoneInput
                                 id="enquire-phone"
-                                type="tel"
-                                required
                                 value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                onChange={(value) => {
+                                    setPhone(value);
+                                    if (phoneError) setPhoneError(false);
+                                }}
+                                defaultCountry="MU"
                                 placeholder="+230 1234 5678"
+                                required
                             />
+                            {phoneError && (
+                                <p className="text-sm text-red-500">
+                                    {t("enquireForm.phoneError", { fallback: "Please enter a valid phone number, including country." })}
+                                </p>
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

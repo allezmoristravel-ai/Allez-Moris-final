@@ -66,6 +66,7 @@
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.71.1",
     "react-i18next": "^16.5.3",
+    "react-phone-number-input": "^3.4.18",
     "react-resizable-panels": "^4.4.1",
     "react-tailwindcss-datepicker": "^2.0.0",
     "recharts": "^3.6.0",
