@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,9 +15,21 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getStrapiMedia } from "@/lib/api";
 import type { Testimonial } from "@/types/strapi";
 
-const fallbackTestimonials = [
+interface TestimonialItem {
+  id: number;
+  name: string;
+  location: string;
+  rating: number;
+  text: string;
+  avatar: string;
+  avatarUrl?: string | null;
+  imageUrl?: string | null;
+}
+
+const fallbackTestimonials: TestimonialItem[] = [
   {
     id: 1,
     name: "Sarah L.",
@@ -53,9 +66,9 @@ interface TestimonialsSectionProps {
 }
 
 const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: TestimonialsSectionProps) => {
-  const [activeReview, setActiveReview] = useState<(typeof fallbackTestimonials)[number] | null>(null);
+  const [activeReview, setActiveReview] = useState<TestimonialItem | null>(null);
 
-  const items = testimonials && testimonials.length > 0
+  const items: TestimonialItem[] = testimonials && testimonials.length > 0
     ? testimonials.map((t) => ({
         id: t.id,
         name: t.customerName,
@@ -63,6 +76,8 @@ const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: Testim
         rating: t.rating,
         text: t.quote,
         avatar: t.customerName?.charAt(0) || "?",
+        avatarUrl: getStrapiMedia(t.avatar?.formats?.thumbnail?.url ?? t.avatar?.url),
+        imageUrl: getStrapiMedia(t.image?.formats?.medium?.url ?? t.image?.url),
       }))
     : fallbackTestimonials;
 
@@ -91,7 +106,20 @@ const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: Testim
               const isLong = testimonial.text.length > TEXT_TRUNCATE_LENGTH;
               return (
                 <CarouselItem key={testimonial.id} className="pl-4 md:pl-8 md:basis-1/3">
-                  <div className="bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow aspect-square flex flex-col">
+                  <div className={`bg-card rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow flex flex-col ${testimonial.imageUrl ? "h-full" : "aspect-square"}`}>
+                    {/* Review photo */}
+                    {testimonial.imageUrl && (
+                      <div className="relative -mx-6 -mt-6 mb-5 h-48 overflow-hidden rounded-t-2xl">
+                        <Image
+                          src={testimonial.imageUrl}
+                          alt={`${testimonial.name}'s trip`}
+                          fill
+                          sizes="(min-width: 768px) 33vw, 100vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+
                     {/* Rating */}
                     <div className="flex gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
@@ -118,10 +146,20 @@ const TestimonialsSection = ({ testimonials, title, subtitle, ctaLabel }: Testim
 
                     {/* Author */}
                     <div className="flex items-center gap-3 mt-auto">
-                      <div className="w-12 h-12 rounded-full bg-ocean flex items-center justify-center flex-shrink-0">
-                        <span className="text-ocean-foreground font-bold text-lg">
-                          {testimonial.avatar}
-                        </span>
+                      <div className="relative w-12 h-12 rounded-full bg-ocean flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {testimonial.avatarUrl ? (
+                          <Image
+                            src={testimonial.avatarUrl}
+                            alt={testimonial.name}
+                            fill
+                            sizes="48px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <span className="text-ocean-foreground font-bold text-lg">
+                            {testimonial.avatar}
+                          </span>
+                        )}
                       </div>
                       <div>
                         <p className="font-semibold text-foreground">

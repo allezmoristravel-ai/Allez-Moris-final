@@ -145,6 +145,7 @@ export interface Testimonial {
     rating: number;
     quote: string;
     avatar?: CloudImage;
+    image?: CloudImage;
     locale: string;
 }
 
