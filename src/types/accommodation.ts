@@ -17,6 +17,7 @@ export interface Accommodation {
     features: string[];
     slug: string;
     locationUrl?: string;
+    youtubeLink?: string | null;
 }
 
 /**
@@ -55,5 +56,6 @@ export function mapStrapiAccommodation(s: StrapiAccommodation): Accommodation {
         description: s.description || '',
         features: parseFeaturesFromRichtext(s.features),
         locationUrl: s.locationUrl,
+        youtubeLink: s.youtubeLink,
     };
 }

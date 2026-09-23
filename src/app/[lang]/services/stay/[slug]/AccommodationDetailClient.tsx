@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, MapPin, Users, Bed, Check, Calendar, ChevronRight, X, Map } from "lucide-react";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { Accommodation } from "@/types/accommodation";
 
 interface AccommodationDetailClientProps {
@@ -199,6 +200,9 @@ export default function AccommodationDetailClient({ accommodation, lang, dict }:
                                     </ul>
                                 </div>
                             )}
+
+                            {/* YouTube Video — maps to CMS "youtubeLink" field */}
+                            <YouTubeEmbed url={accommodation.youtubeLink} title={accommodation.title} />
 
                             {/* Map Section */}
                             {mapEmbedUrl && (

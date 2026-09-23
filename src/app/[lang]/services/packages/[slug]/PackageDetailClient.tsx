@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, MapPin, Users, Clock, Check, X, Calendar, ChevronRight, Map } from "lucide-react";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { getStrapiMedia } from "@/lib/api";
 import type { HolidayPackage } from "@/types/strapi";
 
@@ -232,6 +233,9 @@ export default function PackageDetailClient({ pkg, lang }: PackageDetailClientPr
                                     </ul>
                                 </div>
                             )}
+
+                            {/* YouTube Video — maps to CMS "youtubeLink" field */}
+                            <YouTubeEmbed url={pkg.youtubeLink} title={pkg.title} />
 
                             {/* Location map — derived from CMS "location" field if it contains a URL */}
                             {mapEmbedUrl && (

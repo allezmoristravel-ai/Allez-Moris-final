@@ -131,6 +131,7 @@ export interface StrapiAccommodation {
 
     // Location
     locationUrl?: string;
+    youtubeLink?: string | null;
 
     // Localization
     locale: string;
@@ -202,6 +203,7 @@ export interface HolidayPackage {
     features?: string[];
     coverImages?: CloudImage[];
     sortOrder?: number;
+    youtubeLink?: string | null;
     locale: string;
 }
 

@@ -9,10 +9,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Users, X, Map, Youtube } from "lucide-react";
+import { Calendar, Check, ChevronLeft, ChevronRight, Clock, Users, X, Map } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
+import YouTubeEmbed from "@/components/YouTubeEmbed";
 import { ActivityPriceDisplay } from "@/components/ActivityPriceDisplay";
 
 export default function ActivityDetailClient({ activity, lang, resolvedMapQuery }: { activity: Activity, lang: string, resolvedMapQuery: string | null }) {
@@ -242,33 +243,7 @@ export default function ActivityDetailClient({ activity, lang, resolvedMapQuery 
               )}
 
               {/* YouTube Video */}
-              {activity.youtubeLink && (() => {
-                const ytMatch = activity.youtubeLink!.match(
-                  /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/
-                );
-                const videoId = ytMatch?.[1];
-                if (!videoId) return null;
-                return (
-                  <div>
-                    <h2 className="font-serif text-2xl font-bold text-foreground mb-4 flex items-center gap-2">
-                      <Youtube className="w-6 h-6 text-primary" />
-                      {t('activity.videoPreview')}
-                    </h2>
-                    <div className="rounded-xl overflow-hidden border border-border/50 shadow-md aspect-video">
-                      <iframe
-                        src={`https://www.youtube.com/embed/${videoId}`}
-                        title={activity.title}
-                        width="100%"
-                        height="100%"
-                        style={{ border: 0 }}
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                );
-              })()}
+              <YouTubeEmbed url={activity.youtubeLink} title={activity.title} />
 
               {/* Map Section */}
               {mapEmbedUrl && (
