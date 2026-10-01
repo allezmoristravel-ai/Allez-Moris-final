@@ -8,7 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, MapPin, Users, Clock, Check, X, Calendar, ChevronRight, Map } from "lucide-react";
 import EnquireFormDialog from "@/components/EnquireFormDialog";
 import YouTubeEmbed from "@/components/YouTubeEmbed";
+import StarRating from "@/components/StarRating";
 import { getStrapiMedia } from "@/lib/api";
+import { formatPackagePrice } from "@/lib/utils";
 import type { HolidayPackage } from "@/types/strapi";
 
 interface PackageDetailClientProps {
@@ -99,8 +101,9 @@ export default function PackageDetailClient({ pkg, lang }: PackageDetailClientPr
 
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent p-6 md:p-12 pointer-events-none">
                         <div className="container mx-auto">
-                            <div className="flex flex-wrap gap-2 mb-4">
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
                                 <Badge variant="secondary" className="capitalize pointer-events-auto">{pkg.packageType}</Badge>
+                                <StarRating value={pkg.starRating} starClassName="w-5 h-5" />
                                 {pkg.region && (
                                     <Badge variant="outline" className="text-white border-white/50 pointer-events-auto">{pkg.region}</Badge>
                                 )}
@@ -264,11 +267,11 @@ export default function PackageDetailClient({ pkg, lang }: PackageDetailClientPr
                             <div className="sticky top-24 bg-card rounded-2xl shadow-lg p-6 border border-border/50">
                                 <div className="mb-6">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-3xl font-bold text-foreground">€{displayPrice}</span>
+                                        <span className="text-3xl font-bold text-foreground">{formatPackagePrice(displayPrice, pkg.currency)}</span>
                                         <span className="text-muted-foreground">/ person</span>
                                     </div>
                                     {pkg.originalPrice && (
-                                        <p className="text-sm text-muted-foreground line-through mt-0.5">€{pkg.originalPrice} / person</p>
+                                        <p className="text-sm text-muted-foreground line-through mt-0.5">{formatPackagePrice(pkg.originalPrice, pkg.currency)} / person</p>
                                     )}
                                     {pkg.duration && (
                                         <p className="text-sm text-muted-foreground mt-1">{pkg.duration}</p>

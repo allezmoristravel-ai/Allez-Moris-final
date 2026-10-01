@@ -12,6 +12,8 @@ import { Star, MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getStrapiMedia } from "@/lib/api";
+import { formatPackagePrice } from "@/lib/utils";
+import StarRating from "@/components/StarRating";
 import type { HolidayPackage, RentalVehicle } from "@/types/strapi";
 
 interface DealItem {
@@ -19,7 +21,10 @@ interface DealItem {
     name: string;
     category: "hotel" | "apartment" | "car";
     region: string;
-    rating: number;
+    /** Placeholder guest rating (rentals / sample deals) */
+    rating?: number;
+    /** Hotel star rating from the CMS (holiday packages) */
+    starRating?: number | null;
     priceDisplay: string;
     originalPriceDisplay?: string;
     discountPercent?: number;
@@ -49,9 +54,9 @@ const mapHolidayPackageToDeal = (p: HolidayPackage, lang: string): DealItem => {
         name: p.title,
         category: isHotelType ? "hotel" : "apartment",
         region: p.region || "",
-        rating: PLACEHOLDER_RATING,
-        priceDisplay: `€${displayPrice}`,
-        originalPriceDisplay: original != null ? `€${original}` : undefined,
+        starRating: p.starRating,
+        priceDisplay: formatPackagePrice(displayPrice, p.currency),
+        originalPriceDisplay: original != null ? formatPackagePrice(original, p.currency) : undefined,
         discountPercent: original && displayPrice ? Math.round(((original - displayPrice) / original) * 100) : undefined,
         location: p.location,
         image: getStrapiMedia(p.coverImages?.[0]?.url) || "/category-stay.jpg",
@@ -257,21 +262,25 @@ const HotelSpecialsCarousel = ({ holidayPackages, rentalDeals, title, subtitle, 
                                                     {item.location}
                                                 </div>
 
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <div className="flex">
-                                                        {[...Array(5)].map((_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`w-4 h-4 ${
-                                                                    i < Math.floor(item.rating)
-                                                                        ? "fill-primary text-primary"
-                                                                        : "text-muted-foreground"
-                                                                }`}
-                                                            />
-                                                        ))}
+                                                {item.rating != null ? (
+                                                    <div className="flex items-center gap-2 mb-3">
+                                                        <div className="flex">
+                                                            {[...Array(5)].map((_, i) => (
+                                                                <Star
+                                                                    key={i}
+                                                                    className={`w-4 h-4 ${
+                                                                        i < Math.floor(item.rating!)
+                                                                            ? "fill-primary text-primary"
+                                                                            : "text-muted-foreground"
+                                                                    }`}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                        <span className="text-sm font-semibold">{item.rating}</span>
                                                     </div>
-                                                    <span className="text-sm font-semibold">{item.rating}</span>
-                                                </div>
+                                                ) : (
+                                                    <StarRating value={item.starRating} className="mb-3" />
+                                                )}
 
                                                 <div className="flex items-baseline gap-2 mb-4">
                                                     <span className="text-2xl font-bold text-primary">

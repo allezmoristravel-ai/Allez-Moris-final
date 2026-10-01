@@ -204,6 +204,8 @@ export interface HolidayPackage {
     coverImages?: CloudImage[];
     sortOrder?: number;
     youtubeLink?: string | null;
+    starRating?: number | null;
+    currency?: string | null;
     locale: string;
 }
 

@@ -452,6 +452,7 @@
                 }
             }
         },
+        "starRating": "{{stars}} étoiles",
         "stayDetail": {
             "Back": "Back to Stays",
             "Bedrooms": "Bedrooms",
